@@ -1,0 +1,54 @@
+{
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
+  "name": "adsbeast",
+  "version": "1.0.0",
+  "description": "Work with your own ADS Beast advertising workspace: pull new leads with their attribution, review campaigns and clients, check alerts and tasks, push conversion outcomes back so the ad platforms optimise for quality rather than volume, and register webhooks. Requires an ADS Beast account and a scoped API key; what the key may reach is decided by the scopes on it.",
+  "author": {
+    "name": "Denha Nexus s.r.o.",
+    "url": "https://adsbeast.pro"
+  },
+  "homepage": "https://github.com/notformal/adsbeast-plugins",
+  "repository": "https://github.com/notformal/adsbeast-plugins",
+  "license": "MIT",
+  "keywords": [
+    "advertising",
+    "leads",
+    "crm",
+    "campaigns",
+    "attribution",
+    "marketing",
+    "adsbeast"
+  ],
+  "extensions": {
+    "com.openai": {
+      "displayName": "ADS Beast",
+      "shortDescription": "Your ADS Beast workspace",
+      "longDescription": "ADS Beast is an ad operations platform for agencies and in-house teams running paid campaigns across Google, Meta, TikTok, LinkedIn and Microsoft. This plugin connects an existing ADS Beast account so you can work with that data in conversation instead of switching to the dashboard.\n\nWhat you can do:\n\n- Pull leads created or updated since your last sync, with contact details, qualification and full attribution: UTM parameters, click identifiers, and the Meta form and campaign a lead came from.\n- Review campaigns, clients, reports, alerts and tasks across the workspace.\n- Move a lead through the pipeline, update its fields, and see pipeline counts by stage.\n- Push conversion outcomes back to ADS Beast, so the ad platforms learn which leads became customers instead of optimising for lead volume. Outcome pushes default to a dry run.\n- Register a webhook to receive events as they happen rather than polling.\n\nHow access works. You supply a scoped API key created in ADS Beast under API Keys; minting one requires an admin account. The key is bound to one organization, and each area is gated by its own scope, so a key with only read access to leads cannot read campaigns and cannot write anything. Scope enforcement is fail-closed: an area the key does not name is unreachable. Call the whoami tool to see exactly which scopes a key carries.\n\nRead tools and write tools are separate, and the tools that are hard to undo are labelled as such: pushing outcomes reaches the ad platforms, and registering a webhook starts sending your data to an outside address.\n\nADS Beast is built and operated by Denha Nexus s.r.o.",
+      "developerName": "Denha Nexus s.r.o.",
+      "category": "Business & Operations",
+      "capabilities": [
+        "Pull new leads with full attribution since a timestamp",
+        "Review campaigns, clients and reports",
+        "Check alerts, unread counts and open tasks",
+        "Move a lead through the pipeline and update its fields",
+        "Push conversion outcomes back for platform optimisation",
+        "Register webhooks for real-time events",
+        "Report which scopes an API key actually carries"
+      ],
+      "websiteURL": "https://adsbeast.pro",
+      "privacyPolicyURL": "https://adsbeast.pro/privacy",
+      "termsOfServiceURL": "https://adsbeast.pro/terms",
+      "defaultPrompt": [
+        "Show me leads created since yesterday with their attribution",
+        "Which campaigns have unread alerts right now?",
+        "Move lead 482 to qualified and add a note about the callback"
+      ],
+      "brandColor": {
+        "light": "#2B3AA6",
+        "dark": "#8093F5"
+      },
+      "logo": "./assets/logo.svg",
+      "composerIcon": "./assets/composer-icon.svg"
+    }
+  }
+}

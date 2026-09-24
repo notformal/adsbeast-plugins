@@ -1,0 +1,23 @@
+{
+  "name": "ad-spec-guard",
+  "displayName": "Ad Spec Guard",
+  "version": "1.0.0",
+  "description": "Verified specifications and decision thresholds for paid advertising: platform character limits, creative dimensions, statistical gates before pausing or scaling a campaign, UTM tagging and policy pre-checks. Answers from maintained tables rather than recall.",
+  "author": {
+    "name": "Denha Nexus s.r.o.",
+    "url": "https://adsbeast.pro"
+  },
+  "homepage": "https://github.com/notformal/adsbeast-plugins",
+  "repository": "https://github.com/notformal/adsbeast-plugins",
+  "license": "MIT",
+  "keywords": [
+    "advertising",
+    "ppc",
+    "google-ads",
+    "meta-ads",
+    "ad-copy",
+    "marketing"
+  ],
+  "skills": "./skills/",
+  "mcpServers": "./.mcp.json"
+}

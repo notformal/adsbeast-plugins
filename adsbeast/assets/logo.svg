@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512" role="img" aria-label="ADS Beast">
+  <title>ADS Beast</title>
+  <rect width="512" height="512" rx="112" fill="#2B3AA6"/>
+  <g fill="none" stroke="#FFFFFF" stroke-linecap="round" stroke-linejoin="round" stroke-width="34">
+    <!-- A rising series: the campaign performance the workspace reports on. -->
+    <path d="M128 336l72-72 56 56 128-128"/>
+    <path d="M320 192h64v64" opacity="0.7"/>
+  </g>
+  <circle cx="200" cy="264" r="20" fill="#FFFFFF"/>
+  <circle cx="256" cy="320" r="20" fill="#FFFFFF"/>
+</svg>

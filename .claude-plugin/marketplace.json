@@ -1,0 +1,55 @@
+{
+  "name": "adsbeast-plugins",
+  "owner": {
+    "name": "Denha Nexus s.r.o.",
+    "url": "https://adsbeast.pro"
+  },
+  "metadata": {
+    "description": "Plugins maintained by Denha Nexus s.r.o. for paid advertising work.",
+    "version": "1.0.0"
+  },
+  "plugins": [
+    {
+      "name": "ad-spec-guard",
+      "source": "./ad-spec-guard",
+      "description": "Verified specifications and decision thresholds for paid advertising: platform character limits, creative dimensions, statistical gates before pausing or scaling a campaign, UTM tagging and policy pre-checks.",
+      "version": "1.0.0",
+      "author": {
+        "name": "Denha Nexus s.r.o.",
+        "url": "https://adsbeast.pro"
+      },
+      "homepage": "https://github.com/notformal/adsbeast-plugins",
+      "license": "MIT",
+      "category": "marketing",
+      "keywords": [
+        "advertising",
+        "ppc",
+        "google-ads",
+        "meta-ads",
+        "ad-copy",
+        "marketing"
+      ]
+    },
+    {
+      "name": "adsbeast",
+      "source": "./adsbeast",
+      "description": "Work with your own ADS Beast advertising workspace: leads with attribution, campaigns, clients, alerts, tasks, conversion outcomes and webhooks. Requires an ADS Beast account and a scoped API key.",
+      "version": "1.0.0",
+      "author": {
+        "name": "Denha Nexus s.r.o.",
+        "url": "https://adsbeast.pro"
+      },
+      "homepage": "https://github.com/notformal/adsbeast-plugins",
+      "license": "MIT",
+      "category": "marketing",
+      "keywords": [
+        "advertising",
+        "leads",
+        "crm",
+        "campaigns",
+        "attribution",
+        "adsbeast"
+      ]
+    }
+  ]
+}

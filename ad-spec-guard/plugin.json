@@ -1,0 +1,59 @@
+{
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
+  "name": "ad-spec-guard",
+  "version": "1.0.0",
+  "description": "Verified specifications and decision thresholds for paid advertising. Checks ad copy against each platform's hard character limits, validates creative files against placement dimensions and file size caps, and gates campaign decisions on whether there is enough data to act. Every answer comes from a maintained table or a stated formula rather than recall, because platform limits change and a misremembered limit produces an ad the platform rejects on upload.",
+  "author": {
+    "name": "Denha Nexus s.r.o.",
+    "url": "https://adsbeast.pro"
+  },
+  "homepage": "https://github.com/notformal/adsbeast-plugins",
+  "repository": "https://github.com/notformal/adsbeast-plugins",
+  "license": "MIT",
+  "keywords": [
+    "advertising",
+    "ppc",
+    "google-ads",
+    "meta-ads",
+    "tiktok-ads",
+    "linkedin-ads",
+    "ad-copy",
+    "creative-specs",
+    "utm",
+    "ab-testing",
+    "marketing"
+  ],
+  "extensions": {
+    "com.openai": {
+      "displayName": "Ad Spec Guard",
+      "shortDescription": "Verified ad specs and limits",
+      "longDescription": "Ad Spec Guard answers the questions a language model gets wrong from memory when it helps with paid advertising.\n\nAsked for a Google search headline, a model will routinely produce 43 characters against a 30 character limit. The copy reads well, nothing in the conversation flags a problem, and the ad is rejected when someone uploads it. The same failure shows up as a 1200x628 image briefed for a vertical story placement, and as a recommendation to pause a campaign that has collected eleven clicks.\n\nThis plugin replaces recall with lookup. Nine read-only tools answer from maintained specification tables and stated formulas:\n\n- Validate drafted ad copy field by field against a platform's hard character limits, and report which fields overflow and by how much.\n- Return the full specification sheet for a platform: copy limits, image formats with required dimensions and file size caps, learning-phase windows, and the conversion history automated bidding needs.\n- Check an image or video file against a placement's dimensions, aspect ratio, weight and accepted file types.\n- Decide whether a campaign has produced enough data to justify pausing it, scaling its budget, rotating a creative or switching bidding strategy, and report what is still missing.\n- Run a two-proportion z-test on an A/B result and report the p-value and the traffic still needed to resolve an inconclusive test.\n- Build and check UTM tagging that will not fragment into duplicate rows in analytics.\n- Test a budget against a cost or return goal without filling any gap with an industry average.\n- Pre-check ad copy for the category and claim patterns behind most policy rejections, with a link to the governing policy page.\n\nCovers Google Ads, Meta, TikTok, LinkedIn and Microsoft Advertising.\n\nNo account and no sign-in. Every tool is a pure function over the figures you supply. Nothing reaches an advertising account, nothing is stored, and no request leaves the server.\n\nThe specification data is maintained by Denha Nexus s.r.o. alongside ADS Beast, an ad operations platform. Platforms revise limits without notice, so the tools report their source and say plainly when something is a house threshold rather than a platform rule.",
+      "developerName": "Denha Nexus s.r.o.",
+      "category": "Business & Operations",
+      "capabilities": [
+        "Validate ad copy against platform character limits",
+        "Return verified platform specification sheets",
+        "Check creative files against placement specs",
+        "Gate campaign decisions on sample size",
+        "Test A/B results for statistical significance",
+        "Build and validate UTM campaign tagging",
+        "Check a budget against a CPA or ROAS goal",
+        "Pre-check ad copy for policy rejection patterns"
+      ],
+      "websiteURL": "https://adsbeast.pro",
+      "privacyPolicyURL": "https://adsbeast.pro/privacy",
+      "termsOfServiceURL": "https://adsbeast.pro/terms",
+      "defaultPrompt": [
+        "Write three Google search headlines for a plumbing service and check the limits",
+        "My Meta campaign has 14 clicks and no conversions after 3 days. Pause it?",
+        "Is a 1200x628 image valid for an Instagram story placement?"
+      ],
+      "brandColor": {
+        "light": "#2B3AA6",
+        "dark": "#8093F5"
+      },
+      "logo": "./assets/logo.svg",
+      "composerIcon": "./assets/composer-icon.svg"
+    }
+  }
+}

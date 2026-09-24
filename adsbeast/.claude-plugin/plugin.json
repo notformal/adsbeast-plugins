@@ -1,0 +1,25 @@
+{
+  "name": "adsbeast",
+  "displayName": "ADS Beast",
+  "version": "1.0.0",
+  "description": "Work with your own ADS Beast advertising workspace: leads with attribution, campaigns, clients, alerts, tasks, conversion outcomes and webhooks. Requires an ADS Beast account and a scoped API key.",
+  "author": {
+    "name": "Denha Nexus s.r.o.",
+    "url": "https://adsbeast.pro"
+  },
+  "homepage": "https://github.com/notformal/adsbeast-plugins",
+  "repository": "https://github.com/notformal/adsbeast-plugins",
+  "license": "MIT",
+  "keywords": ["advertising", "leads", "crm", "campaigns", "attribution", "adsbeast"],
+  "skills": "./skills/",
+  "mcpServers": "./.mcp.json",
+  "userConfig": {
+    "api_key": {
+      "type": "string",
+      "title": "ADS Beast API key",
+      "description": "A scoped key from ADS Beast under API Keys, starting with absk_. Minting one requires an admin account. The scopes on the key decide what this plugin can reach.",
+      "required": true,
+      "sensitive": true
+    }
+  }
+}

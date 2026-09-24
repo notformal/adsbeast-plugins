@@ -1,0 +1,32 @@
+{
+  "name": "adsbeast-plugins",
+  "interface": {
+    "displayName": "ADS Beast Plugins"
+  },
+  "plugins": [
+    {
+      "name": "ad-spec-guard",
+      "source": {
+        "source": "local",
+        "path": "./ad-spec-guard"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_FIRST_USE"
+      },
+      "category": "Business & Operations"
+    },
+    {
+      "name": "adsbeast",
+      "source": {
+        "source": "local",
+        "path": "./adsbeast"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Business & Operations"
+    }
+  ]
+}

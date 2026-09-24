@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512" role="img" aria-label="Ad Spec Guard">
+  <title>Ad Spec Guard</title>
+  <g fill="none" stroke="#2B3AA6" stroke-linecap="round" stroke-linejoin="round">
+    <g stroke-width="30" opacity="0.6">
+      <path d="M112 168V112h56"/>
+      <path d="M344 112h56v56"/>
+      <path d="M400 344v56h-56"/>
+      <path d="M168 400h-56v-56"/>
+    </g>
+    <path d="M180 260l50 50 102-116" stroke-width="46"/>
+  </g>
+</svg>
