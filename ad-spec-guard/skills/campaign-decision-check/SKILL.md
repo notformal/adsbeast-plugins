@@ -33,7 +33,12 @@ recommendation built on noise.
    for whichever of these is missing rather than filling it in.
 2. Call `check_decision_readiness` with the platform, the decision and the
    data that exists. Pass only measured values; leave unknown arguments out
-   rather than estimating them.
+   rather than estimating them. Pick the decision that matches the question:
+   `judge_rate_metric` for a verdict on a click-through rate or conversion
+   rate, which is gated on clicks; `judge_metric` for a verdict on cost per
+   acquisition or return on ad spend, which is gated on conversions. Asking
+   for conversions before answering a question about click-through rate is
+   the wrong gate.
 3. Read the result before forming an opinion. If it reports the data is
    insufficient, that is the finding. Report what is missing and how much
    more is needed.
