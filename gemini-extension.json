@@ -1,6 +1,6 @@
 {
   "name": "adsbeast",
-  "version": "1.3.4",
+  "version": "1.3.5",
   "description": "ADS Beast for Gemini CLI: your advertising workspace (campaigns, leads, alerts, reports, campaign drafts for approval) plus verified ad specs and limits.",
   "contextFileName": "GEMINI.md",
   "settings": [

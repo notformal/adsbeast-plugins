@@ -129,13 +129,13 @@ Every limit the server enforces, per plan. Counters restart on the 1st of the mo
 No plan has overage charges or automatic top-ups: at a limit the tool says so and names the reset date.
 No plan limits ad platforms or campaigns.
 
-| Plan | Tool calls a month | Assistant questions a month | Reports a month | Clients | People | Ad accounts |
-| --- | --- | --- | --- | --- | --- | --- |
-| Free (no card, no time limit) | 100 | 15 | 3 | 1 | 1 | 1 |
-| Connector | 2,000 | 300 | 10 | 3 | 1 | no cap |
-| Starter | 10,000 | no cap | no cap | 5 | 2 | no cap |
-| Agency | 100,000 | no cap | no cap | 50 | 10 | no cap |
-| Enterprise | no cap | no cap | no cap | 999 | 100 | no cap |
+| Plan | Tool calls a month | Assistant questions a month | Reports a month | Clients | People | Ad accounts | Published landing pages |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| Free (no card, no time limit) | 100 | 15 | 3 | 1 | 1 | 1 | 0 |
+| Connector | 2,000 | 300 | 10 | 3 | 1 | no cap | 3 |
+| Starter | 10,000 | no cap | no cap | 5 | 2 | no cap | 10 |
+| Agency | 100,000 | no cap | no cap | 50 | 10 | no cap | 50 |
+| Enterprise | no cap | no cap | no cap | 999 | 100 | no cap | 500 |
 <!-- /generated -->
 
 ## Safety
