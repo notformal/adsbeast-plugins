@@ -1,0 +1,26 @@
+{
+  "name": "adsbeast-plugins",
+  "owner": {
+    "name": "Denha Nexus s.r.o."
+  },
+  "metadata": {
+    "description": "Plugins maintained by Denha Nexus s.r.o. for paid advertising work.",
+    "version": "1.1.0"
+  },
+  "plugins": [
+    {
+      "name": "ad-spec-guard",
+      "source": "ad-spec-guard",
+      "description": "Verified ad platform limits, creative specs, statistical gates before pausing or scaling, UTM tagging and policy pre-checks. No account needed.",
+      "category": "marketing",
+      "tags": ["advertising", "ppc", "ad-copy", "marketing"]
+    },
+    {
+      "name": "adsbeast",
+      "source": "adsbeast",
+      "description": "Your ADS Beast advertising workspace: campaigns, leads with attribution, alerts, reports, change proposals and campaign drafts for human approval. Requires an ADS Beast account and a scoped API key.",
+      "category": "marketing",
+      "tags": ["advertising", "campaigns", "leads", "marketing"]
+    }
+  ]
+}

@@ -1,0 +1,44 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+  "name": "io.github.notformal/adsbeast",
+  "title": "ADS Beast",
+  "description": "Ad operations workspace: campaigns, leads, alerts, reports and campaign drafts for human approval.",
+  "version": "1.1.0",
+  "websiteUrl": "https://adsbeast.pro",
+  "repository": {
+    "url": "https://github.com/notformal/adsbeast-plugins",
+    "source": "github",
+    "id": "1385269349",
+    "subfolder": "adsbeast"
+  },
+  "icons": [
+    {
+      "src": "https://raw.githubusercontent.com/notformal/adsbeast-plugins/main/adsbeast/assets/logo.svg",
+      "mimeType": "image/svg+xml",
+      "sizes": ["any"]
+    }
+  ],
+  "remotes": [
+    {
+      "type": "streamable-http",
+      "url": "https://adsbeast.pro/api/mcp/workspace",
+      "headers": [
+        {
+          "name": "Authorization",
+          "description": "Bearer followed by a scoped ADS Beast API key (absk_...), created by an admin under API Keys in the ADS Beast workspace.",
+          "value": "Bearer {api_key}",
+          "isRequired": true,
+          "isSecret": true,
+          "variables": {
+            "api_key": {
+              "description": "Scoped ADS Beast API key, starts with absk_.",
+              "isRequired": true,
+              "isSecret": true,
+              "placeholder": "absk_..."
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

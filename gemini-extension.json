@@ -1,0 +1,25 @@
+{
+  "name": "adsbeast",
+  "version": "1.1.0",
+  "description": "ADS Beast for Gemini CLI: your advertising workspace (campaigns, leads, alerts, reports, campaign drafts for approval) plus verified ad specs and limits.",
+  "contextFileName": "GEMINI.md",
+  "settings": [
+    {
+      "name": "ADS Beast API key",
+      "description": "A scoped key from ADS Beast under API Keys, starting with absk_. An admin creates it. Leave empty to use only the ad-spec-guard tools, which need no account.",
+      "envVar": "ADSBEAST_API_KEY",
+      "sensitive": true
+    }
+  ],
+  "mcpServers": {
+    "adsbeast": {
+      "httpUrl": "https://adsbeast.pro/api/mcp/workspace",
+      "headers": {
+        "Authorization": "Bearer ${ADSBEAST_API_KEY}"
+      }
+    },
+    "ad-spec-guard": {
+      "httpUrl": "https://adsbeast.pro/api/mcp"
+    }
+  }
+}

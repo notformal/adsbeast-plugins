@@ -46,12 +46,31 @@ key at all.
 Give a key the scopes the work needs and no more. `whoami` reports what a key
 actually carries, and is the first thing to call when something is refused.
 
+## Workflows
+
+Nine skills ship with the plugin. They tell the assistant which tools to
+call, in what order, and where to stop and ask: `account-audit`,
+`wasted-spend-hunt`, `search-terms-negatives`, `campaign-launch`,
+`budget-pacing-check`, `weekly-report`, `conversion-tracking-check`,
+`lead-pipeline-review` and `connect-adsbeast`.
+
+Every workflow checks the connection with `whoami` first, reports amounts in
+the currency of the ad account, never repeats a create that failed, and asks
+before anything that could affect spend.
+
+In Claude Code they are also commands: `/adsbeast:audit`,
+`/adsbeast:wasted-spend`, `/adsbeast:launch`, `/adsbeast:pacing`,
+`/adsbeast:weekly-report`, `/adsbeast:tracking-check`, `/adsbeast:leads`.
+
+## Changes and campaigns
+
+The assistant cannot change an ad account. `propose_campaign_change` creates
+a proposal (pause, enable, budget) that a person approves in ADS Beast.
+`create_campaign_draft` builds a campaign as a draft in the campaign builder;
+a person publishes it, it is uploaded paused, and activation is approved
+separately.
+
 ## Install
-
-### ChatGPT and Codex
-
-Open **Plugins**, select ADS Beast, install, and supply your API key when
-prompted.
 
 ### Claude Code
 
@@ -62,19 +81,13 @@ prompted.
 
 Claude asks for the API key on install and stores it in your system keychain.
 
-### Any other MCP client
+### Codex, Cursor, Gemini CLI, Windsurf and other clients
 
-```json
-{
-  "mcpServers": {
-    "adsbeast": {
-      "type": "http",
-      "url": "https://adsbeast.pro/api/mcp/workspace",
-      "headers": { "Authorization": "Bearer absk_your_key" }
-    }
-  }
-}
-```
+See [CONNECTING.md](../CONNECTING.md). Ready configs are in
+[`clients/`](./clients).
+
+The plugin is not listed in the ChatGPT app directory or the Claude connector
+directory.
 
 `X-API-Key` works in place of the `Authorization` header if your client prefers
 it. The handshake and the tool catalogue answer without a key; every tool call
@@ -104,3 +117,12 @@ Issues: https://github.com/notformal/adsbeast-plugins/issues
 ## Licence
 
 MIT. See [LICENSE](../LICENSE).
+
+## Publishing safety
+
+`seo_publish_safety` (scope `read:seo`) tells an agent how many new articles a
+site may publish today, whether publishing is paused and why, and which
+published articles are kept out of search. Sites launch gradually: 2 new
+articles a day, plus 1 a week up to 6, one language version of a topic a day.
+A search-traffic cliff pauses publishing until a person lifts it. An
+integration key can read this state but cannot change it.

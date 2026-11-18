@@ -10,6 +10,7 @@
   "homepage": "https://github.com/notformal/adsbeast-plugins",
   "repository": "https://github.com/notformal/adsbeast-plugins",
   "license": "MIT",
+  "privacyPolicyUrl": "https://adsbeast.pro/privacy",
   "keywords": [
     "advertising",
     "ppc",

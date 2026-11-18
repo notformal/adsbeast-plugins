@@ -1,0 +1,27 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+  "name": "io.github.notformal/ad-spec-guard",
+  "title": "Ad Spec Guard",
+  "description": "Ad platform character limits, creative specs, A/B significance, UTM and policy checks. No account.",
+  "version": "1.0.0",
+  "websiteUrl": "https://adsbeast.pro",
+  "repository": {
+    "url": "https://github.com/notformal/adsbeast-plugins",
+    "source": "github",
+    "id": "1385269349",
+    "subfolder": "ad-spec-guard"
+  },
+  "icons": [
+    {
+      "src": "https://raw.githubusercontent.com/notformal/adsbeast-plugins/main/ad-spec-guard/assets/logo.svg",
+      "mimeType": "image/svg+xml",
+      "sizes": ["any"]
+    }
+  ],
+  "remotes": [
+    {
+      "type": "streamable-http",
+      "url": "https://adsbeast.pro/api/mcp"
+    }
+  ]
+}

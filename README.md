@@ -1,39 +1,121 @@
 # ADS Beast plugins
 
-Plugins for ChatGPT, Codex and Claude, maintained by
-[Denha Nexus s.r.o.](https://adsbeast.pro)
+Connect an AI assistant to [ADS Beast](https://adsbeast.pro), an ad operations
+platform for agencies and in-house teams. Maintained by Denha Nexus s.r.o.
 
-| Plugin | What it does | Account required |
+This repository holds no server code. It holds what an assistant needs to use
+two hosted MCP servers well: manifests for each client, and workflow skills
+that tell the assistant which tools to call, in what order, and where to stop
+and ask.
+
+| Plugin | Server | What it does | Account |
+| --- | --- | --- | --- |
+| [adsbeast](./adsbeast) | `https://adsbeast.pro/api/mcp/workspace` | Your own workspace: clients, campaigns, leads with attribution, alerts, reports, change proposals, campaign drafts. | Yes |
+| [ad-spec-guard](./ad-spec-guard) | `https://adsbeast.pro/api/mcp` | Ad platform character limits, creative specs, statistical gates before pausing or scaling, UTM tagging, policy pre-checks. | No |
+
+Both servers speak MCP over streamable HTTP.
+
+## Install
+
+| Client | How |
+| --- | --- |
+| Claude Code | `/plugin marketplace add notformal/adsbeast-plugins`, then `/plugin install adsbeast@adsbeast-plugins` and `/plugin install ad-spec-guard@adsbeast-plugins` |
+| Codex CLI | `codex plugin marketplace add notformal/adsbeast-plugins`, or clone and run `adsbeast/clients/codex/install.sh` (`install.ps1` on Windows) |
+| Cursor | Copy [`adsbeast/clients/cursor/mcp.json`](./adsbeast/clients/cursor/mcp.json) into `~/.cursor/mcp.json` |
+| Gemini CLI | `gemini extensions install https://github.com/notformal/adsbeast-plugins` |
+| Windsurf | Copy [`adsbeast/clients/windsurf/mcp_config.json`](./adsbeast/clients/windsurf/mcp_config.json) into `~/.codeium/windsurf/mcp_config.json` |
+| Anything else | See [CONNECTING.md](./CONNECTING.md) |
+
+Details, variations and troubleshooting for each client are in
+[CONNECTING.md](./CONNECTING.md).
+
+Where this is not available yet: the plugins are not listed in the ChatGPT app
+directory or in the Claude connector directory. In ChatGPT and in Claude on the
+web they cannot be added from a catalogue today.
+
+## Tool groups of the workspace server
+
+The live list is always the server's own: `tools/list` answers without a key.
+
+| Group | Examples | Writes |
 | --- | --- | --- |
-| [ad-spec-guard](./ad-spec-guard) | Verified platform specifications, creative specs, statistical gates before acting on a campaign, UTM tagging and policy pre-checks. | No |
-| [adsbeast](./adsbeast) | Your own ADS Beast workspace: leads with attribution, campaigns, clients, alerts, tasks, conversion outcomes and webhooks. | Yes |
+| Diagnostics | `whoami` | no |
+| Clients | `list_clients`, `get_client`, `get_agency_kit` | no |
+| Campaigns | `list_campaigns`, `get_campaign`, `campaign_dashboard_summary` | no |
+| Change proposals | `list_proposals`, `propose_campaign_change`, `reject_proposal` | proposals only |
+| Campaign drafts | `list_campaign_types`, `create_campaign_draft`, `update_campaign_draft`, `get_campaign_draft`, `list_campaign_drafts` | drafts only |
+| Leads | `get_new_leads`, `get_lead`, `lead_pipeline_stats`, `update_lead`, `move_lead_stage` | yes |
+| Conversion outcomes | `lead_outcome_contract`, `push_lead_outcomes` | yes, dry run by default |
+| Alerts, tasks, reports | `list_alerts`, `alerts_unread_count`, `list_tasks`, `list_reports` | no |
+| Outreach | `list_outreach_campaigns`, `outreach_campaign_check`, `list_offer_packs` | no |
+| Webhooks | `list_webhooks`, `list_webhook_events`, `create_webhook` | yes |
 
-## Add this marketplace
+## Workflow skills
 
-### Codex
+Shipped in [`adsbeast/skills`](./adsbeast/skills). Each one starts by checking
+the connection and ends by saying what it could not check.
 
-```
-codex plugin marketplace add notformal/adsbeast-plugins
-```
+| Skill | Use it for |
+| --- | --- |
+| `account-audit` | A health check of one client's account |
+| `wasted-spend-hunt` | Campaigns that spend and do not return |
+| `search-terms-negatives` | Turning a search terms export into negative keywords |
+| `campaign-launch` | Building a campaign as a draft: preview, confirm, draft |
+| `budget-pacing-check` | Whether budgets last the period |
+| `weekly-report` | A factual weekly status for one client |
+| `conversion-tracking-check` | Whether results are being counted |
+| `lead-pipeline-review` | Lead quality, stuck leads, writing outcomes back |
+| `connect-adsbeast` | A tool answered 401 or 403 |
 
-### Claude Code
+In Claude Code, Cursor and Gemini CLI the same workflows are commands, for
+example `/adsbeast:audit` and `/adsbeast:launch`.
 
-```
-/plugin marketplace add notformal/adsbeast-plugins
-/plugin install ad-spec-guard@adsbeast-plugins
-/plugin install adsbeast@adsbeast-plugins
-```
+## Authentication
 
-## Why these exist
+The workspace server takes a scoped API key, `Authorization: Bearer absk_...`
+(`X-API-Key` also works). An admin creates the key in ADS Beast under API
+Keys; it is shown once. The key belongs to one organization and carries
+scopes such as `read:campaigns` or `write:leads`. An area the key does not
+name is unreachable. `whoami` reports what a key carries.
 
-An assistant helping with paid advertising fails in a specific, repeatable way:
-it recalls a platform limit instead of checking one. The copy reads well and
-the ad is rejected on upload. The same shape of failure produces creative at
-the wrong dimensions, campaigns paused on a dozen clicks, and budget plans
-built on an industry average presented as a projection.
+Sign-in without a key (OAuth 2.1 with PKCE) is implemented on the server, but
+the discovery documents are not reachable on the production domain yet, so
+clients that insist on OAuth cannot connect today. Use a key.
 
-These plugins answer from maintained tables and stated formulas, and say
-plainly when a figure is an operating threshold rather than a platform rule.
+Ad Spec Guard needs no authentication.
+
+## Security model
+
+- Read tools and write tools are separate, and every tool declares whether it
+  is read-only or destructive.
+- An assistant cannot change an ad account directly. A campaign change is a
+  proposal that a person approves in ADS Beast. A new campaign is a draft
+  that a person publishes from the campaign builder; it is uploaded paused
+  and activation is approved separately.
+- An integration key cannot approve, publish, roll back, or reach billing,
+  settings and platform credentials.
+- Writing lead outcomes defaults to a dry run.
+- A key can be bound to a single client, and can be revoked at any time under
+  API Keys.
+- Keys are never part of this repository. Every config here reads the key
+  from an environment variable or from the client's own secret store.
+
+## What the platform covers
+
+ADS Beast reads campaigns from Google Ads, Meta, TikTok, LinkedIn and
+Microsoft Advertising accounts that you connect. Its Google Ads API access is
+at the Basic level; an application for Standard access is pending.
+
+## Pricing
+
+Ad Spec Guard is free. The workspace server is part of an ADS Beast account;
+plans and their MCP allowances are on https://adsbeast.pro/pricing.
+
+## Support and legal
+
+- Issues: https://github.com/notformal/adsbeast-plugins/issues
+- Privacy: https://adsbeast.pro/privacy
+- Terms: https://adsbeast.pro/terms
 
 ## Licence
 

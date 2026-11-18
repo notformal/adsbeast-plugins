@@ -1,0 +1,10 @@
+{
+  "mcpServers": {
+    "adsbeast": {
+      "url": "https://adsbeast.pro/api/mcp/workspace",
+      "headers": {
+        "Authorization": "Bearer ${ADSBEAST_API_KEY}"
+      }
+    }
+  }
+}

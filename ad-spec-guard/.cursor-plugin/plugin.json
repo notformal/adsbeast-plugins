@@ -1,0 +1,21 @@
+{
+  "name": "ad-spec-guard",
+  "version": "1.0.0",
+  "description": "Verified ad platform limits, creative specs, statistical gates before pausing or scaling, UTM tagging and policy pre-checks. No account needed.",
+  "author": {
+    "name": "Denha Nexus s.r.o."
+  },
+  "homepage": "https://adsbeast.pro",
+  "repository": "https://github.com/notformal/adsbeast-plugins",
+  "license": "MIT",
+  "keywords": ["advertising", "ppc", "google-ads", "meta-ads", "ad-copy", "marketing"],
+  "logo": "assets/logo.svg",
+  "skills": "skills",
+  "mcpServers": {
+    "mcpServers": {
+      "ad-spec-guard": {
+        "url": "https://adsbeast.pro/api/mcp"
+      }
+    }
+  }
+}

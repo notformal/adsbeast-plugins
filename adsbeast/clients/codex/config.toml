@@ -1,0 +1,10 @@
+# Add to ~/.codex/config.toml (or let install.sh / install.ps1 do it).
+# The key is read from the ADSBEAST_API_KEY environment variable at start;
+# it is never written to this file.
+
+[mcp_servers.adsbeast]
+url = "https://adsbeast.pro/api/mcp/workspace"
+bearer_token_env_var = "ADSBEAST_API_KEY"
+
+[mcp_servers.ad-spec-guard]
+url = "https://adsbeast.pro/api/mcp"

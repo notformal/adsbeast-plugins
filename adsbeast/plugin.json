@@ -1,7 +1,7 @@
 {
   "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
   "name": "adsbeast",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Work with your own ADS Beast advertising workspace: pull new leads with their attribution, review campaigns and clients, check alerts and tasks, push conversion outcomes back so the ad platforms optimise for quality rather than volume, and register webhooks. Requires an ADS Beast account and a scoped API key; what the key may reach is decided by the scopes on it.",
   "author": {
     "name": "Denha Nexus s.r.o.",

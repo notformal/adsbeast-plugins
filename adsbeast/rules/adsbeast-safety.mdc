@@ -1,0 +1,30 @@
+---
+description: Safety rules for working with the ADS Beast workspace MCP server. Apply whenever a tool of the adsbeast server is about to be called.
+alwaysApply: false
+---
+
+# ADS Beast workspace: rules for every call
+
+1. Check the connection first. Call `whoami` before any other tool of the
+   adsbeast server. If it fails, the key is missing or revoked: say so and
+   stop. Never ask for a key to be pasted into the chat.
+2. Amounts are in the currency of the ad account they came from. Name the
+   currency next to every figure. Never add up figures from accounts in
+   different currencies and never assume dollars.
+3. Never retry a failed create. If `create_campaign_draft`,
+   `propose_campaign_change`, `create_webhook` or a non-dry-run
+   `push_lead_outcomes` errors or times out, look first with
+   `list_campaign_drafts`, `list_proposals` or `list_webhooks`, then report
+   what exists.
+4. Confirm before anything that affects spend. Show the exact change with
+   the current value, the new value and the currency, and wait for a clear
+   yes.
+5. The server cannot approve, publish or activate. A proposal waits for a
+   person in ADS Beast; a campaign draft is published by a person and is
+   uploaded paused. Do not report a change as done.
+6. An empty list is not a clean result. Say nothing was returned and name
+   what was not checked.
+7. Use the matching skill for multi-step work (account-audit,
+   wasted-spend-hunt, search-terms-negatives, campaign-launch,
+   budget-pacing-check, weekly-report, conversion-tracking-check,
+   lead-pipeline-review) instead of improvising the order of calls.
