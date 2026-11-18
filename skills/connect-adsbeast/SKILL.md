@@ -38,6 +38,8 @@ person these steps for their client; never ask for the key in the chat.
      it, reinstall the plugin.
    - Cursor, Gemini CLI, Windsurf: put the key in the `ADSBEAST_API_KEY`
      environment variable; the configs in this package read it from there.
+     The package's `mcp.json` sends `Authorization: Bearer ${ADSBEAST_API_KEY}`
+     too, but Codex drops that header, which is why Codex needs its own step.
 3. Call `whoami`. It answers with the key's organization, scopes and the
    calls left this month.
 

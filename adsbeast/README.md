@@ -115,6 +115,12 @@ and open a new terminal. Details: [CONNECTING.md](../CONNECTING.md#codex-cli).
 See [CONNECTING.md](../CONNECTING.md). Ready configs are in
 [`clients/`](./clients).
 
+The package's own server list, [`mcp.json`](./mcp.json), sends
+`Authorization: Bearer ${ADSBEAST_API_KEY}`: the form Claude Code fills from
+the environment (checked on Claude Code 2.1.323) and the one Cursor's plugin
+file uses. Codex reads this file but drops the header (checked on Codex 0.167),
+so Codex still needs the `codex mcp add` line above.
+
 The plugin is not listed in the ChatGPT app directory or the Claude connector
 directory.
 

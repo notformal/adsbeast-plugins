@@ -3,7 +3,10 @@
   "mcpServers": {
     "adsbeast": {
       "type": "streamable-http",
-      "url": "https://adsbeast.pro/api/mcp/workspace"
+      "url": "https://adsbeast.pro/api/mcp/workspace",
+      "headers": {
+        "Authorization": "Bearer ${ADSBEAST_API_KEY}"
+      }
     }
   }
 }
