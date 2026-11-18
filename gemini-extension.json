@@ -13,13 +13,15 @@
   ],
   "mcpServers": {
     "adsbeast": {
-      "httpUrl": "https://adsbeast.pro/api/mcp/workspace",
+      "url": "https://adsbeast.pro/api/mcp/workspace",
+      "type": "http",
       "headers": {
         "Authorization": "Bearer ${ADSBEAST_API_KEY}"
       }
     },
     "ad-spec-guard": {
-      "httpUrl": "https://adsbeast.pro/api/mcp"
+      "url": "https://adsbeast.pro/api/mcp",
+      "type": "http"
     }
   }
 }

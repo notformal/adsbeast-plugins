@@ -8,13 +8,13 @@ name: Publish to MCP Registry
 # The registry refuses a version it already holds, so a run only changes
 # anything after "version" in a server.json was raised.
 
+# Started by hand (Actions tab, or `gh workflow run publish-mcp-registry.yml`)
+# after a version was raised. Not on push: a run that cannot start, for
+# example while Actions is unavailable for the account, would fail on every
+# sync of this repository.
+
 on:
   workflow_dispatch:
-  push:
-    branches: [main]
-    paths:
-      - "adsbeast/server.json"
-      - "ad-spec-guard/server.json"
 
 jobs:
   publish:
