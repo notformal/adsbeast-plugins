@@ -6,7 +6,7 @@
   },
   "metadata": {
     "description": "Plugins maintained by Denha Nexus s.r.o. for paid advertising work.",
-    "version": "1.2.0"
+    "version": "1.3.0"
   },
   "plugins": [
     {
@@ -33,8 +33,8 @@
     {
       "name": "adsbeast",
       "source": "./adsbeast",
-      "description": "Work with your own ADS Beast advertising workspace: campaigns, leads with attribution, alerts, reports, change proposals and campaign drafts for human approval, with workflow skills for audits, wasted spend, launches and weekly reports. Requires an ADS Beast account and a scoped API key.",
-      "version": "1.2.0",
+      "description": "Work with your own ADS Beast advertising workspace: account audits, wasted spend, tracking and budget checks, platform comparison, leads with attribution, and campaign changes that run only from a stored preview and wait for a person's approval. Twelve workflow skills. Requires an ADS Beast account and a scoped API key.",
+      "version": "1.3.0",
       "author": {
         "name": "Denha Nexus s.r.o.",
         "url": "https://adsbeast.pro"

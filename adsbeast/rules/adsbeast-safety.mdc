@@ -30,4 +30,14 @@ alwaysApply: false
 7. Use the matching skill for multi-step work (account-audit,
    wasted-spend-hunt, search-terms-negatives, campaign-launch,
    budget-pacing-check, weekly-report, conversion-tracking-check,
-   lead-pipeline-review) instead of improvising the order of calls.
+   lead-pipeline-review, creative-fatigue-check,
+   cross-platform-comparison, competitor-ads-review) instead of
+   improvising the order of calls.
+8. Spend calls sparingly. Every call except `whoami` counts against the
+   plan's monthly allowance; `whoami` shows what is left. Reuse replies,
+   pass the `client_id`, and run a tool that performs an analysis (an
+   audit, a campaign analysis, competitor research) only when the plain
+   figures do not answer the question.
+9. Say how sure you are. Name the period and the volume behind a
+   verdict, call a small sample not enough data, and never promise a
+   result.

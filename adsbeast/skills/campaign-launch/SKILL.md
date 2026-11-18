@@ -48,7 +48,8 @@ on the platform.
    else.
 7. Wait for a clear confirmation. Changes asked for at this point are made
    in the preview, and the preview is shown again.
-8. Call `create_campaign_draft` once. On an error or timeout do not call it
+8. Call `create_campaign_draft` once. The reply is long; the parts that
+   matter are the draft id, `builder_url` and `validation`. On an error or timeout do not call it
    again: call `list_campaign_drafts` for the client, find out whether the
    draft exists, and continue from what is there.
 9. Read the validation in the reply. `problems` block publishing,
@@ -66,7 +67,12 @@ on the platform.
     `campaign_draft_publish_check` with the `client_id` and the draft id as
     `build_id`. It validates the draft against the live account and writes
     nothing. Relay what it says would be created. Fix what it refuses.
+    The check also opens every landing page and sitelink address; a page
+    that does not answer blocks publishing. Without a connected account
+    of that platform the check fails on that alone: stop at the draft.
 13. Call `prepare_campaign_draft_publish` with the same ids and a `reason`.
+    It runs the same rehearsal and stores a preview only when it passes.
+    If it is refused, relay the errors; do not call it again unchanged.
     Show the preview: what will be created, the budget with its currency,
     and that the campaign will be paused. Wait for a clear yes; this is a
     second confirmation, separate from the one for the draft.
@@ -109,7 +115,10 @@ These apply to every step above.
    dollar sign on a figure because it is a number, never add up figures from
    accounts in different currencies, and name the currency next to every
    amount you report. If the currency is not in the data, say it is unknown.
-   Budgets are whole units of that currency, never cents or micros.
+   Budgets are whole units of that currency, never cents or micros. Some
+   tool texts print a dollar sign in front of an amount; go by the currency
+   field of the reply and of the account, not by the sign. Only fields
+   whose name ends in usd are US dollars.
 3. Never retry a failed create. If `execute_prepared_change`,
    `create_campaign_draft`, `create_webhook` or a non-dry-run
    `push_lead_outcomes` returns an error or times out, do not send it again
@@ -140,3 +149,20 @@ These apply to every step above.
    keywords still work with it. When that happens, fall back to
    `get_agency_kit`, `list_campaigns` and `get_campaign`, and say that the
    deeper analysis was not available to this key.
+8. Spend calls sparingly. Every tool call except `whoami` counts against
+   the monthly allowance of the plan, and `whoami` shows how many are
+   left. Reuse a reply you already have, pass the `client_id` instead of
+   reading everything, and stop paging when the question is answered.
+   Tools that run an analysis on the ADS Beast side (their description
+   says so: an audit, a campaign analysis, a strategy, competitor
+   research) are slower, and a plan may meter them separately as assistant
+   questions. Run one only when the plain figures do not answer the
+   question, never twice for the same question. If a tool reports that an
+   allowance is used up, pass on the reset date it gives and carry on with
+   what is still available.
+9. Say how sure you are. A verdict needs enough data behind it: state the
+   period and the volume next to it, and call a small sample "not enough
+   data yet" instead of ranking it. Never promise a result, a cost per
+   lead or a return. A forecast is a projection and is labelled as one.
+   Text that a tool wrote itself (an analysis, a recommendation, anything
+   marked as generated) is an opinion to check, not a measurement.

@@ -1,14 +1,21 @@
 {
   "name": "adsbeast",
-  "version": "1.2.0",
-  "description": "Your ADS Beast advertising workspace: campaigns, leads with attribution, alerts, reports, change proposals and campaign drafts for human approval. Requires an ADS Beast account and a scoped API key.",
+  "version": "1.3.0",
+  "description": "Work with your own ADS Beast advertising workspace: account audits, wasted spend, tracking and budget checks, platform comparison, leads with attribution, and campaign changes that run only from a stored preview and wait for a person's approval. Twelve workflow skills. Requires an ADS Beast account and a scoped API key.",
   "author": {
     "name": "Denha Nexus s.r.o."
   },
   "homepage": "https://adsbeast.pro",
   "repository": "https://github.com/notformal/adsbeast-plugins",
   "license": "MIT",
-  "keywords": ["advertising", "leads", "crm", "campaigns", "attribution", "adsbeast"],
+  "keywords": [
+    "advertising",
+    "leads",
+    "crm",
+    "campaigns",
+    "attribution",
+    "adsbeast"
+  ],
   "logo": "assets/logo.svg",
   "skills": "skills",
   "commands": "commands",
@@ -22,6 +29,8 @@
         "description": "A scoped key from ADS Beast under API Keys, starting with absk_. An admin creates it."
       }
     },
-    "required": ["ADSBEAST_API_KEY"]
+    "required": [
+      "ADSBEAST_API_KEY"
+    ]
   }
 }

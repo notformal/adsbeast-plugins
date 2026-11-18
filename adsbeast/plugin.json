@@ -1,8 +1,8 @@
 {
   "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
   "name": "adsbeast",
-  "version": "1.2.0",
-  "description": "Work with your own ADS Beast advertising workspace: pull new leads with their attribution, review campaigns and clients, check alerts and tasks, push conversion outcomes back so the ad platforms optimise for quality rather than volume, and register webhooks. Requires an ADS Beast account and a scoped API key; what the key may reach is decided by the scopes on it.",
+  "version": "1.3.0",
+  "description": "Work with your own ADS Beast advertising workspace: audit ad accounts, find wasted spend, check conversion tracking and budget pace, compare platforms, review leads with their attribution, and prepare campaign changes and new campaigns. A change runs only from a stored preview and waits for a person to approve it unless the client opted in to automatic changes. Requires an ADS Beast account and a scoped API key; what the key may reach is decided by the scopes on it.",
   "author": {
     "name": "Denha Nexus s.r.o.",
     "url": "https://adsbeast.pro"
@@ -23,25 +23,29 @@
     "com.openai": {
       "displayName": "ADS Beast",
       "shortDescription": "Your ADS Beast workspace",
-      "longDescription": "ADS Beast is an ad operations platform for agencies and in-house teams running paid campaigns across Google, Meta, TikTok, LinkedIn and Microsoft. This plugin connects an existing ADS Beast account so you can work with that data in conversation instead of switching to the dashboard.\n\nWhat you can do:\n\n- Pull leads created or updated since your last sync, with contact details, qualification and full attribution: UTM parameters, click identifiers, and the Meta form and campaign a lead came from.\n- Review campaigns, clients, reports, alerts and tasks across the workspace.\n- Move a lead through the pipeline, update its fields, and see pipeline counts by stage.\n- Push conversion outcomes back to ADS Beast, so the ad platforms learn which leads became customers instead of optimising for lead volume. Outcome pushes default to a dry run.\n- Register a webhook to receive events as they happen rather than polling.\n\nHow access works. You supply a scoped API key created in ADS Beast under API Keys; minting one requires an admin account. The key is bound to one organization, and each area is gated by its own scope, so a key with only read access to leads cannot read campaigns and cannot write anything. Scope enforcement is fail-closed: an area the key does not name is unreachable. Call the whoami tool to see exactly which scopes a key carries.\n\nRead tools and write tools are separate, and the tools that are hard to undo are labelled as such: pushing outcomes reaches the ad platforms, and registering a webhook starts sending your data to an outside address.\n\nADS Beast is built and operated by Denha Nexus s.r.o.",
+      "longDescription": "ADS Beast is an ad operations platform for agencies and in-house teams running paid campaigns across Google, Meta, TikTok, LinkedIn and Microsoft. This plugin connects an existing ADS Beast account so you can work with that data in conversation instead of switching to the dashboard.\n\nWhat you can do:\n\n- Audit a client's ad account, find campaigns that spend without results, and check whether conversion tracking is counting what it should.\n- Read spend, results and cost per result by platform and period, in the currency of each ad account, and compare platforms side by side.\n- Check budget pace, creative fatigue and what competitors show in their ads.\n- Pull leads with full attribution, move them through the pipeline, and push conversion outcomes back so the ad platforms learn which leads became customers. Outcome pushes default to a dry run.\n- Prepare a change: pause a campaign, change a budget, add negative keywords, or publish a campaign draft to Google Search or Meta, always paused.\n\nHow changes work. A change takes two calls. The first stores a preview of exactly that change, valid for 15 minutes and usable once. The second submits that preview and nothing else. Unless the client has explicitly opted in to automatic changes of that kind, a person then approves it in ADS Beast. The plugin cannot approve, and it cannot switch a campaign on without a person.\n\nHow access works. You supply a scoped API key created in ADS Beast under API Keys; minting one requires an admin account. The key is bound to one organization, and each area is gated by its own scope. Scope enforcement is fail-closed: an area the key does not name is unreachable. Call the whoami tool to see which scopes a key carries and how many calls the plan has left this month.\n\nTwelve workflow skills ship with the plugin, among them account audit, wasted-spend hunt, budget pacing, conversion tracking check, weekly report and campaign launch.\n\nADS Beast is built and operated by Denha Nexus s.r.o.",
       "developerName": "Denha Nexus s.r.o.",
       "category": "Business & Operations",
       "capabilities": [
-        "Pull new leads with full attribution since a timestamp",
-        "Review campaigns, clients and reports",
-        "Check alerts, unread counts and open tasks",
-        "Move a lead through the pipeline and update its fields",
+        "Audit an ad account and list findings by severity",
+        "Find campaigns that spend without results",
+        "Check conversion tracking and conversion goals",
+        "Report spend, results and cost per result by platform",
+        "Check budget pace against the period",
+        "Spot creative fatigue on Meta and TikTok",
+        "Pull leads with full attribution and move them through the pipeline",
         "Push conversion outcomes back for platform optimisation",
-        "Register webhooks for real-time events",
-        "Report which scopes an API key actually carries"
+        "Prepare a pause, a budget change or negative keywords as a preview",
+        "Build a campaign draft and prepare publishing it paused",
+        "Report which scopes an API key carries and the calls left"
       ],
       "websiteURL": "https://adsbeast.pro",
       "privacyPolicyURL": "https://adsbeast.pro/privacy",
       "termsOfServiceURL": "https://adsbeast.pro/terms",
       "defaultPrompt": [
-        "Show me leads created since yesterday with their attribution",
-        "Which campaigns have unread alerts right now?",
-        "Move lead 482 to qualified and add a note about the callback"
+        "Audit the ad account of my client and list what is wasting money",
+        "Compare Google and Meta for this client over the last 30 days",
+        "Show me leads created since yesterday with their attribution"
       ],
       "brandColor": {
         "light": "#2B3AA6",

@@ -35,7 +35,9 @@ web they cannot be added from a catalogue today.
 
 ## Tool groups of the workspace server
 
-The live list is always the server's own: `tools/list` answers without a key.
+The workspace server serves 170+ tools. The table shows the groups the
+workflows below rely on; the full, current list is the server's own, and
+`tools/list` answers without a key.
 
 | Group | Examples | Writes |
 | --- | --- | --- |
@@ -43,7 +45,9 @@ The live list is always the server's own: `tools/list` answers without a key.
 | Clients | `list_clients`, `get_client`, `get_agency_kit` | no |
 | Campaigns | `list_campaigns`, `get_campaign`, `campaign_dashboard_summary`, `campaign_analyze` | no |
 | Audits | `audit_account`, `audit_google_ads`, `audit_meta_ads`, `audit_wasted_spend`, `audit_tracking`, `audit_conversion_goals`, `audit_campaign_portfolio` | no |
-| Analytics | `analytics_summary`, `analytics_compare_periods`, `analytics_forecast`, `client_data_freshness` | no |
+| Analytics | `analytics_summary`, `analytics_compare_periods`, `analytics_attribution`, `analytics_forecast`, `client_goals`, `client_data_freshness` | no |
+| Creatives | `creative_fatigue_report`, `meta_ads_learning_phase`, `google_ads_ad_strength` | no |
+| Competitors | `competitor_list`, `competitor_site_analyze`, `competitor_search_intel`, `competitor_ads_research` | no |
 | Changes, in two steps | `prepare_campaign_pause`, `prepare_campaign_budget_change`, `prepare_negative_keywords_add`, `prepare_campaign_draft_publish`, then `execute_prepared_change` and `get_prepared_change` | only from a stored preview |
 | Proposals | `list_proposals`, `reject_proposal` | reject only |
 | Campaign drafts | `list_campaign_types`, `create_campaign_draft`, `update_campaign_draft`, `get_campaign_draft`, `list_campaign_drafts`, `campaign_draft_publish_check` | drafts only |
@@ -68,10 +72,17 @@ the connection and ends by saying what it could not check.
 | `weekly-report` | A factual weekly status for one client |
 | `conversion-tracking-check` | Whether results are being counted |
 | `lead-pipeline-review` | Lead quality, stuck leads, writing outcomes back |
+| `creative-fatigue-check` | Ads the audience has seen too often, on Meta and TikTok |
+| `cross-platform-comparison` | Platforms side by side on cost per result and return |
+| `competitor-ads-review` | What competitors advertise, observed and inferred kept apart |
 | `connect-adsbeast` | A tool answered 401 or 403 |
 
 In Claude Code, Cursor and Gemini CLI the same workflows are commands, for
 example `/adsbeast:audit` and `/adsbeast:launch`.
+
+Every tool call counts against the monthly allowance of the plan, and
+`whoami` reports how many calls are left. The skills are written to ask
+for what a question needs and no more.
 
 ## Authentication
 

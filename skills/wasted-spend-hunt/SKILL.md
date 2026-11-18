@@ -1,6 +1,6 @@
 ---
 name: wasted-spend-hunt
-description: Workflow for finding advertising spend that returns nothing, using the ADS Beast workspace server. Use this when someone asks where money is being wasted, which campaigns to cut, why cost per lead went up, or wants a list of campaigns to pause. The workflow checks the connection with whoami, calls audit_wasted_spend for campaigns that burn budget, reads the client's goals in get_agency_kit, checks tracking and the lead pipeline so that a measurement fault is not mistaken for waste, and ranks what is left. Each cut the person agrees to is prepared with prepare_campaign_pause or prepare_campaign_budget_change, shown as a preview, and submitted with execute_prepared_change. The search terms report is not exposed by this server.
+description: Workflow for finding advertising spend that returns nothing, using the ADS Beast workspace server. Use this when someone asks where money is being wasted, which campaigns to cut, why cost per lead went up, wants a wasted-spend hunt or a list of campaigns to pause. The workflow checks the connection with whoami, calls audit_wasted_spend for campaigns that burn budget, reads the client's goals in get_agency_kit, checks tracking and the lead pipeline so that a measurement fault is not mistaken for waste, and ranks what is left. Each cut the person agrees to is prepared with prepare_campaign_pause or prepare_campaign_budget_change, shown as a preview, and submitted with execute_prepared_change. The search terms report is not exposed by this server.
 ---
 
 # Wasted-spend hunt
@@ -26,13 +26,25 @@ report, so the hunt says so instead of guessing at queries.
    expensive against this client's own target, not against an industry
    average.
 4. Call `audit_wasted_spend` with the `client_id` and a `days` window. It
-   returns campaigns with spend and no conversions, cost per result above
-   target and no clicks, with the amounts lost in the account currency.
+   returns campaigns with spend and no conversions or with a cost per
+   result far above target. Read the units: `total_spend` is in the account
+   currency, while `waste_estimate`, `total_waste` and the amounts inside
+   the reason texts are converted to US dollars. Report the spend in the
+   account currency and quote the estimate as an estimate in US dollars.
+   Two cases need a second look. When the account currency is unknown the
+   tool cannot value anything and answers that nothing was found: that is
+   "not evaluated", so check `audit_campaign_portfolio` for campaigns
+   without conversions before saying the account is clean. And a reach or
+   awareness campaign is listed for having no conversions although it was
+   never meant to produce any; judge it against its own goal.
 5. Call `analytics_summary` for the same window to see the waste against
-   the client's total, and `campaign_analyze` for a candidate that needs a
-   closer look before a verdict.
+   the client's total. For one candidate that needs a closer look before a
+   verdict, call `campaign_analyze`; it runs an analysis and takes a few
+   seconds, so use it for the one or two rows that matter, not for all.
 6. For Google accounts call `google_ads_keyword_overlap`: the same keyword
-   live in several campaigns makes them bid against each other.
+   live in several campaigns makes them bid against each other. It needs a
+   Google account connected through the API; on an account that is not, it
+   returns an error and no clusters, which means not checked.
 7. Check each candidate against `list_alerts` (`campaign_id`, `is_resolved`
    false) and `audit_tracking`. A campaign with broken tracking looks like
    waste and is not: the fix is the tracking, not a pause. Run the
@@ -81,7 +93,10 @@ These apply to every step above.
    dollar sign on a figure because it is a number, never add up figures from
    accounts in different currencies, and name the currency next to every
    amount you report. If the currency is not in the data, say it is unknown.
-   Budgets are whole units of that currency, never cents or micros.
+   Budgets are whole units of that currency, never cents or micros. Some
+   tool texts print a dollar sign in front of an amount; go by the currency
+   field of the reply and of the account, not by the sign. Only fields
+   whose name ends in usd are US dollars.
 3. Never retry a failed create. If `execute_prepared_change`,
    `create_campaign_draft`, `create_webhook` or a non-dry-run
    `push_lead_outcomes` returns an error or times out, do not send it again
@@ -112,3 +127,20 @@ These apply to every step above.
    keywords still work with it. When that happens, fall back to
    `get_agency_kit`, `list_campaigns` and `get_campaign`, and say that the
    deeper analysis was not available to this key.
+8. Spend calls sparingly. Every tool call except `whoami` counts against
+   the monthly allowance of the plan, and `whoami` shows how many are
+   left. Reuse a reply you already have, pass the `client_id` instead of
+   reading everything, and stop paging when the question is answered.
+   Tools that run an analysis on the ADS Beast side (their description
+   says so: an audit, a campaign analysis, a strategy, competitor
+   research) are slower, and a plan may meter them separately as assistant
+   questions. Run one only when the plain figures do not answer the
+   question, never twice for the same question. If a tool reports that an
+   allowance is used up, pass on the reset date it gives and carry on with
+   what is still available.
+9. Say how sure you are. A verdict needs enough data behind it: state the
+   period and the volume next to it, and call a small sample "not enough
+   data yet" instead of ranking it. Never promise a result, a cost per
+   lead or a return. A forecast is a projection and is labelled as one.
+   Text that a tool wrote itself (an analysis, a recommendation, anything
+   marked as generated) is an opinion to check, not a measurement.

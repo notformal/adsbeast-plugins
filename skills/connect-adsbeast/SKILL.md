@@ -33,6 +33,9 @@ Each key carries scopes, and every area is gated separately:
 | Alerts | `read:alerts`, `write:alerts` |
 | Tasks | `read:tasks`, `write:tasks` |
 | Webhooks | `read:webhooks`, `write:webhooks` |
+| Change proposals, previews, campaign drafts | `read:proposals`, `write:proposals` |
+| Outreach | `read:outreach` |
+| SEO and AI visibility | `read:seo` |
 
 Enforcement is fail-closed. An area the key does not name is unreachable,
 and areas outside this table, such as billing, settings and the platform
@@ -53,6 +56,13 @@ integrations, are not reachable with any integration key at all.
    the record belongs to a different organization than the key does.
 5. If `whoami` itself fails, the key is missing, wrong, expired or revoked.
    Say that rather than diagnosing scopes.
+6. If the tool says the month's calls are used up, that is the plan's
+   allowance, not the key. `whoami` is not counted and still answers: it
+   shows the calls used, the calls included and the reset date. Pass those
+   on with the link it gives, and do not retry until the reset.
+7. If an audit or analytics tool answers 403 while the scope is present,
+   the key is bound to a single client. Those tools need a key that is
+   not bound to one client.
 
 ## Reporting the result
 

@@ -38,6 +38,14 @@ This extension connects two MCP servers run by ADS Beast.
    word.
 7. An empty list is not a clean bill of health. Report it as nothing
    returned and say what was not checked.
+8. Spend calls sparingly. Every call except `whoami` counts against the
+   plan's monthly allowance; `whoami` shows what is left. Reuse replies,
+   pass the `client_id`, and run a tool that performs an analysis (an
+   audit, a campaign analysis, competitor research) only when the plain
+   figures do not answer the question.
+9. Say how sure you are. Name the period and the volume behind a
+   verdict, call a small sample not enough data, and never promise a
+   result.
 
 ## Workflows
 
@@ -54,11 +62,16 @@ instead of improvising the order of calls:
 | Weekly status | `weekly-report` |
 | Is tracking working | `conversion-tracking-check` |
 | Leads and outcomes | `lead-pipeline-review` |
+| Tired creatives, rising frequency | `creative-fatigue-check` |
+| Which platform works better | `cross-platform-comparison` |
+| What competitors advertise | `competitor-ads-review` |
 | A tool answered 401 or 403 | `connect-adsbeast` |
 
 The same workflows are available as commands: `/adsbeast:audit`,
 `/adsbeast:wasted-spend`, `/adsbeast:launch`, `/adsbeast:pacing`,
-`/adsbeast:weekly-report`, `/adsbeast:tracking-check`, `/adsbeast:leads`.
+`/adsbeast:weekly-report`, `/adsbeast:tracking-check`, `/adsbeast:leads`,
+`/adsbeast:creative-fatigue`, `/adsbeast:compare-platforms`,
+`/adsbeast:competitors`.
 
 ## Ad copy and specs
 

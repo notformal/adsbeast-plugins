@@ -48,11 +48,13 @@ actually carries, and is the first thing to call when something is refused.
 
 ## Workflows
 
-Nine skills ship with the plugin. They tell the assistant which tools to
+Twelve skills ship with the plugin. They tell the assistant which tools to
 call, in what order, and where to stop and ask: `account-audit`,
 `wasted-spend-hunt`, `search-terms-negatives`, `campaign-launch`,
 `budget-pacing-check`, `weekly-report`, `conversion-tracking-check`,
-`lead-pipeline-review` and `connect-adsbeast`.
+`lead-pipeline-review`, `creative-fatigue-check`,
+`cross-platform-comparison`, `competitor-ads-review` and
+`connect-adsbeast`.
 
 Every workflow checks the connection with `whoami` first, reports amounts in
 the currency of the ad account, never repeats a create that failed, and asks
@@ -60,7 +62,9 @@ before anything that could affect spend.
 
 In Claude Code they are also commands: `/adsbeast:audit`,
 `/adsbeast:wasted-spend`, `/adsbeast:launch`, `/adsbeast:pacing`,
-`/adsbeast:weekly-report`, `/adsbeast:tracking-check`, `/adsbeast:leads`.
+`/adsbeast:weekly-report`, `/adsbeast:tracking-check`, `/adsbeast:leads`,
+`/adsbeast:creative-fatigue`, `/adsbeast:compare-platforms`,
+`/adsbeast:competitors`.
 
 ## Changes and campaigns
 
