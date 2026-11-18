@@ -17,6 +17,30 @@ that.
 - A tool that used to work has started refusing.
 - Someone is deciding what scopes to put on a new key.
 
+## Setting the key up
+
+Installing the plugin does not give it a key. Until one is set, every
+workspace tool answers 401 and the 401 message says how to fix it. Tell the
+person these steps for their client; never ask for the key in the chat.
+
+1. In ADS Beast an admin opens https://adsbeast.pro/api-keys, presses
+   **New key**, ticks the scopes the work needs and copies the key. It starts
+   with `absk_` and is shown once.
+2. Give it to the client:
+   - Codex: `codex mcp add adsbeast --url https://adsbeast.pro/api/mcp/workspace --bearer-token-env-var ADSBEAST_API_KEY`,
+     then set `ADSBEAST_API_KEY` for good (macOS and Linux: add
+     `export ADSBEAST_API_KEY=absk_...` to `~/.zshrc` or `~/.bashrc`;
+     Windows PowerShell: `[Environment]::SetEnvironmentVariable("ADSBEAST_API_KEY", "absk_...", "User")`)
+     and open a new terminal before starting Codex. `codex mcp list` shows
+     `Bearer token` in the Auth column once it is right. A Codex plugin cannot
+     carry the key itself, so this step is needed even after `codex plugin add`.
+   - Claude Code: the plugin asks for the key when it is installed; to change
+     it, reinstall the plugin.
+   - Cursor, Gemini CLI, Windsurf: put the key in the `ADSBEAST_API_KEY`
+     environment variable; the configs in this package read it from there.
+3. Call `whoami`. It answers with the key's organization, scopes and the
+   calls left this month.
+
 ## How access is decided
 
 An ADS Beast key looks like `absk_...` and is created in the product under

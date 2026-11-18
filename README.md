@@ -20,7 +20,7 @@ Both servers speak MCP over streamable HTTP.
 | Client | How |
 | --- | --- |
 | Claude Code | `/plugin marketplace add notformal/adsbeast-plugins`, then `/plugin install adsbeast@adsbeast-plugins` and `/plugin install ad-spec-guard@adsbeast-plugins` |
-| Codex CLI | `codex plugin marketplace add notformal/adsbeast-plugins`, or clone and run `adsbeast/clients/codex/install.sh` (`install.ps1` on Windows) |
+| Codex CLI | `codex plugin marketplace add notformal/adsbeast-plugins`, then `codex plugin add adsbeast@adsbeast-plugins`, then the key: `codex mcp add adsbeast --url https://adsbeast.pro/api/mcp/workspace --bearer-token-env-var ADSBEAST_API_KEY` and set `ADSBEAST_API_KEY` ([details](./CONNECTING.md#codex-cli)). Or clone and run `adsbeast/clients/codex/install.sh` (`install.ps1` on Windows) |
 | Cursor | Copy [`adsbeast/clients/cursor/mcp.json`](./adsbeast/clients/cursor/mcp.json) into `~/.cursor/mcp.json` |
 | Gemini CLI | `gemini extensions install https://github.com/notformal/adsbeast-plugins` |
 | Windsurf | Copy [`adsbeast/clients/windsurf/mcp_config.json`](./adsbeast/clients/windsurf/mcp_config.json) into `~/.codeium/windsurf/mcp_config.json` |
@@ -35,7 +35,7 @@ web they cannot be added from a catalogue today.
 
 ## Tool groups of the workspace server
 
-The workspace server serves 170+ tools. The table shows the groups the
+The workspace server serves <!-- generated:tool-count -->186<!-- /generated --> tools. The table shows the groups the
 workflows below rely on; the full, current list is the server's own, and
 `tools/list` answers without a key.
 
@@ -83,6 +83,22 @@ example `/adsbeast:audit` and `/adsbeast:launch`.
 Every tool call counts against the monthly allowance of the plan, and
 `whoami` reports how many calls are left. The skills are written to ask
 for what a question needs and no more.
+
+## Plans and limits
+
+<!-- generated:plans -->
+Every limit the server enforces, per plan. Counters restart on the 1st of the month (UTC).
+No plan has overage charges or automatic top-ups: at a limit the tool says so and names the reset date.
+No plan limits ad platforms or campaigns.
+
+| Plan | Tool calls a month | Assistant questions a month | Reports a month | Clients | People | Ad accounts |
+| --- | --- | --- | --- | --- | --- | --- |
+| Free (no card, no time limit) | 100 | 15 | 3 | 1 | 1 | 1 |
+| Connector | 2,000 | 300 | 10 | 3 | 1 | no cap |
+| Starter | 10,000 | no cap | no cap | 5 | 2 | no cap |
+| Agency | 100,000 | no cap | no cap | 50 | 10 | no cap |
+| Enterprise | no cap | no cap | no cap | 999 | 100 | no cap |
+<!-- /generated -->
 
 ## Authentication
 

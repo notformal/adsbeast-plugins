@@ -52,11 +52,37 @@ claude mcp add --transport http ad-spec-guard https://adsbeast.pro/api/mcp
 
 ### Codex CLI
 
-As a plugin marketplace:
+As a plugin (skills and both servers):
 
 ```
 codex plugin marketplace add notformal/adsbeast-plugins
+codex plugin add adsbeast@adsbeast-plugins
+codex plugin add ad-spec-guard@adsbeast-plugins
 ```
+
+The plugin cannot carry the API key: Codex ignores authorization headers in
+a plugin's server list. Register the key once, under the same server name, so
+it replaces the plugin's keyless entry:
+
+```
+codex mcp add adsbeast --url https://adsbeast.pro/api/mcp/workspace --bearer-token-env-var ADSBEAST_API_KEY
+```
+
+Then set the variable for good and open a new terminal:
+
+```bash
+# macOS and Linux: add to ~/.zshrc or ~/.bashrc
+export ADSBEAST_API_KEY=absk_...
+```
+
+```powershell
+# Windows PowerShell: stored for your user, survives a restart
+[Environment]::SetEnvironmentVariable("ADSBEAST_API_KEY", "absk_...", "User")
+```
+
+`$env:ADSBEAST_API_KEY = "absk_..."` works only in the window where you type
+it. `codex mcp list` shows `Bearer token` in the Auth column once the key is
+wired; without it the workspace tools answer 401 with these same steps.
 
 Or skills plus servers with the install script:
 
