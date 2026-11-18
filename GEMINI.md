@@ -69,7 +69,7 @@ instead of improvising the order of calls:
 
 The same workflows are available as commands: `/adsbeast:audit`,
 `/adsbeast:wasted-spend`, `/adsbeast:launch`, `/adsbeast:pacing`,
-`/adsbeast:weekly-report`, `/adsbeast:tracking-check`, `/adsbeast:leads`,
+`/adsbeast:weekly`, `/adsbeast:tracking-check`, `/adsbeast:leads`,
 `/adsbeast:creative-fatigue`, `/adsbeast:compare-platforms`,
 `/adsbeast:competitors`.
 

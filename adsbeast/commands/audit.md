@@ -4,4 +4,4 @@ description: Audit one client's advertising account in ADS Beast
 
 Audit the advertising account of this client: $ARGUMENTS
 
-Follow the account-audit skill of the ADS Beast plugin step by step. Start by calling `whoami` on the adsbeast server to check the connection. If no client was named above, list the clients and ask which one. Report amounts in the currency of the ad account, do not repeat a create or an execute call that failed, and show the preview and ask for confirmation before any change is submitted.
+Before the first tool call, load the account-audit skill of the ADS Beast plugin (in Claude Code its name is adsbeast:account-audit) and read it in full. Then follow its steps in order; do not make up your own sequence of calls. The first call is `whoami` on the adsbeast server, once, to check the connection. If no client was named above, list the clients and ask which one. Report amounts in the currency of the ad account, do not repeat a create or an execute call that failed, and show the preview and ask for confirmation before any change is submitted.

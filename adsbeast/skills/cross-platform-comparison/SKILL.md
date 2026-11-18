@@ -1,6 +1,6 @@
 ---
 name: cross-platform-comparison
-description: Workflow for comparing a client's advertising platforms side by side on cost per result and return on ad spend, using the ADS Beast workspace server. Use this when someone asks which platform works better, wants Google against Meta or TikTok, a cross-platform ROAS or CPA comparison, or asks where the next part of the budget should go. The workflow checks the connection with whoami, reads the accounts and how fresh the data is, takes spend, results, CPA and ROAS per platform from analytics_summary, the goals from client_goals, the trend from analytics_compare_periods and the multi-touch view from analytics_attribution, then reports the platforms in one table with the currency, the sample size and what cannot be compared. A budget shift is only prepared with prepare_campaign_budget_change after the person agrees.
+description: Workflow for comparing a client's advertising platforms side by side on cost per result and return on ad spend, using the ADS Beast workspace server. Use this when someone asks which platform works better, wants Google against Meta or TikTok, a cross-platform ROAS or CPA comparison, or asks where the next part of the budget should go. The workflow checks the connection with whoami, reads the connected platforms and how fresh the data is, takes spend, results, CPA and ROAS per platform from analytics_summary, the goals from client_goals, the trend from analytics_compare_periods and the multi-touch view from analytics_attribution, then reports the platforms in one table with the currency, the sample size and what cannot be compared. A budget shift is only prepared with prepare_campaign_budget_change after the person agrees.
 ---
 
 # Cross-platform comparison
@@ -19,12 +19,12 @@ which are too small to call, and which are not comparable at all.
 
 1. Call `whoami`. The comparison needs `read:campaigns` and
    `read:clients`; preparing a budget change needs `write:proposals`.
-2. Call `get_client` with the `client_id` for the connected platforms and
-   their currencies. One connected platform means there is nothing to
-   compare: say so and offer the account-audit workflow instead.
-3. Call `client_data_freshness` with the `client_id`. A platform synced
-   yesterday against one synced last week is not a fair comparison; name
-   the dates, or compare only the period both cover.
+2. Settle the client. Call `list_clients` if it was not named.
+3. Call `client_data_freshness` with the `client_id`. It names the
+   connected platforms and when the data was last synced. One connected
+   platform means there is nothing to compare: say so and offer the
+   account-audit workflow instead. Data that is days old is compared with
+   its date next to it.
 4. Call `analytics_summary` with the `client_id` and `days` (30 unless the
    person asked for another window). One call returns the split by
    platform: spend, results, click rate, cost per result and the currency

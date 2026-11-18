@@ -23,13 +23,18 @@ could not show.
    the audit; say which parts will be skipped.
 2. Pick the client. If the person did not name one, call `list_clients` and
    ask. Do not audit "everything" in one pass.
-3. Call `get_client` with that `client_id`. Note the connected advertising
-   accounts, the budget and the goals. A client with no connected account
-   cannot be audited from here: say so and stop.
-4. Call `get_agency_kit` with the same `client_id`. It carries the last 30
-   days of results per account and campaign, leads by stage, the KPI goals
-   and the write policy. Read the write policy: it says whether changes are
-   allowed at all for this client.
+3. Call `get_agency_kit` with that `client_id`. One reply carries the
+   client's profile and goals, the connected ad accounts with their
+   platform and how each is connected, the last 30 days of results per
+   campaign with its currency, leads by stage, the write policy and the
+   proposals already pending. A client with no account in it cannot be
+   audited from here: say so and stop.
+4. Read two things in the kit before going on. The write policy says
+   whether changes are allowed at all for this client. And the way an
+   account is connected decides how deep the audit goes: an account
+   connected through the platform's API can be checked live, one that holds
+   imported figures is audited on those figures only. `get_client` adds the
+   monthly budget and its currency when they are needed.
 5. Call `client_data_freshness` with the `client_id`. If a platform was
    last synced long ago, every finding about it carries that date.
 6. Call `audit_campaign_portfolio` with the `client_id`. It scores every

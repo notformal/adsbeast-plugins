@@ -62,7 +62,7 @@ before anything that could affect spend.
 
 In Claude Code they are also commands: `/adsbeast:audit`,
 `/adsbeast:wasted-spend`, `/adsbeast:launch`, `/adsbeast:pacing`,
-`/adsbeast:weekly-report`, `/adsbeast:tracking-check`, `/adsbeast:leads`,
+`/adsbeast:weekly`, `/adsbeast:tracking-check`, `/adsbeast:leads`,
 `/adsbeast:creative-fatigue`, `/adsbeast:compare-platforms`,
 `/adsbeast:competitors`.
 

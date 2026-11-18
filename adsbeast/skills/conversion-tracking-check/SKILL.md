@@ -25,9 +25,10 @@ to check by hand.
 
 1. Call `whoami`. Needs `read:clients`, `read:campaigns`, `read:leads`,
    `read:alerts`; `write:proposals` only if something will be created.
-2. Call `get_client` with the `client_id`: which ad accounts are connected.
-   A platform that is not connected reports nothing; that is not a tracking
-   fault.
+2. Call `get_agency_kit` with the `client_id`: which ad accounts are
+   connected and how, and the conversions each campaign reported over the
+   last 30 days. A platform that is not connected reports nothing; that is
+   not a tracking fault.
 3. Call `audit_tracking` with the `client_id`: pixel, GA4 and tag
    mismatches on the landing page, conversion actions and the other
    tracking guards, in one report.
@@ -39,8 +40,8 @@ to check by hand.
    Both need a Google account connected through the API. Without one the
    first says there is nothing to check and the second answers with an
    error: report that as not checked and do not call it again.
-   Then `get_agency_kit` for the conversions reported over the last 30
-   days and `list_campaigns` for campaigns that spend and report none.
+   The kit from step 2 already lists the campaigns that spend and report
+   no conversions; do not fetch it again.
 5. Call `lead_pipeline_stats` with the `client_id` and `days` 30, and
    `get_new_leads` with `since` 30 days back. Look at the attribution on the
    leads: UTM values, click ids, platform form and campaign ids.

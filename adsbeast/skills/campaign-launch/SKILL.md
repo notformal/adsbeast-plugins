@@ -29,13 +29,15 @@ on the platform.
 
 1. Call `whoami`. Drafting and publishing need `read:proposals` and
    `write:proposals`; reading the client needs `read:clients`.
-2. Call `get_client` with the `client_id`. Confirm that an account on the
-   target platform is connected and note its currency. No connected
-   account: a draft can still be saved, but it cannot be published. Say so
-   before going on.
-3. Call `get_agency_kit` for the offer, geography, languages, goals and the
-   write policy of this client. Facts in the ads come from here and from the
-   landing page, not from general knowledge.
+2. Call `get_agency_kit` with the `client_id`. Its list of accounts shows
+   whether an account on the target platform is connected and how. An
+   account connected through the platform's API can receive a campaign.
+   Without one, a draft can still be saved but cannot be published from
+   here. Say so before going on.
+3. From the same reply take the offer, geography, goals, brand rules and
+   the write policy of this client, and the currency its campaigns run in.
+   Facts in the ads come from here and from the landing page, not from
+   general knowledge.
 4. Call `list_campaign_types` with the `platform`. Pick the type and read
    its `fields`: they are the exact shape and the character limits the draft
    must meet. Do not write copy to remembered limits.

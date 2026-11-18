@@ -4,4 +4,4 @@ description: Compare a client's ad platforms on cost and return
 
 Compare the advertising platforms of this client side by side: $ARGUMENTS
 
-Follow the cross-platform-comparison skill of the ADS Beast plugin step by step. Start by calling `whoami` on the adsbeast server to check the connection. If no client was named above, list the clients and ask which one. Report amounts in the currency of the ad account, do not repeat a create or an execute call that failed, and show the preview and ask for confirmation before any change is submitted.
+Before the first tool call, load the cross-platform-comparison skill of the ADS Beast plugin (in Claude Code its name is adsbeast:cross-platform-comparison) and read it in full. Then follow its steps in order; do not make up your own sequence of calls. The first call is `whoami` on the adsbeast server, once, to check the connection. If no client was named above, list the clients and ask which one. Report amounts in the currency of the ad account, do not repeat a create or an execute call that failed, and show the preview and ask for confirmation before any change is submitted.

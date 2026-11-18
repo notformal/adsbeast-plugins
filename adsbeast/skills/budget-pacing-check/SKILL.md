@@ -23,8 +23,9 @@ return, so the answer is only as fresh as the last sync, and it says so.
 1. Call `whoami`. Needs `read:clients` and `read:campaigns`; `read:alerts`
    for the alert cross-check; `write:proposals` only if a change will be
    proposed.
-2. Call `get_client` for the client's budget, its period and the connected
-   accounts with their currencies.
+2. Call `get_client` for the client's monthly budget and the currency it
+   is stated in. The connected platforms and the currency of each account
+   come with the `analytics_summary` reply in step 4.
 3. Call `client_data_freshness` with the `client_id`. Pace computed from
    data that is days old is reported with that date, or not at all.
 4. Call `analytics_summary` with the `client_id` and `days` set to the days

@@ -23,11 +23,12 @@ matching signal is the ad strength of its search ads.
 
 1. Call `whoami`. The check needs `read:campaigns` and `read:clients`;
    filing the result needs `write:proposals` or `write:tasks`.
-2. Call `get_client` with the `client_id` for the connected platforms. If
-   neither Meta nor TikTok is connected, say that frequency-based fatigue
-   cannot be measured for this client and go to step 6 for Google.
-3. Call `client_data_freshness` with the `client_id`. Fatigue is a trend;
-   on stale data it is a trend that ended on the last sync date. Say so.
+2. Settle the client. Call `list_clients` if it was not named.
+3. Call `client_data_freshness` with the `client_id`. It names the
+   connected platforms and the last sync date. If neither Meta nor TikTok
+   is connected, say that frequency-based fatigue cannot be measured for
+   this client and go to step 6 for Google. Fatigue is a trend; on stale
+   data it is a trend that ended on the last sync date. Say so.
 4. Call `creative_fatigue_report` with the `client_id`. It lists campaigns
    whose average frequency is above the threshold (3.5 unless
    `threshold_frequency` is passed) and whose click rate is falling, with
@@ -41,8 +42,10 @@ matching signal is the ad strength of its search ads.
    `current_days` 14 and `previous_days` 14. Fatigue shows as a lower click
    rate and a higher cost per result at similar spend. If cost per result
    held, the ads are seen often but still work: that is "watch", not
-   "tired". Use `campaign_analyze` for a single campaign only when the
-   two periods disagree and the reason matters.
+   "tired". The comparison covers the platform as a whole, not one
+   campaign; when the platform runs other campaigns too, say that the
+   figures are shared. Use `campaign_analyze` for a single campaign only
+   when the two periods disagree and the reason matters.
 6. Platform detail, only for platforms the client has connected through
    the API: `meta_ads_learning_phase` with the `client_id` shows ad sets
    stuck in learning, which also depresses results and is not fatigue;
