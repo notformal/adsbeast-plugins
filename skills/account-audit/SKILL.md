@@ -1,6 +1,6 @@
 ---
 name: account-audit
-description: Workflow for auditing one client's advertising account through the ADS Beast workspace server. Use this when someone asks for an audit, a health check, a review of an account or client, or asks what is wrong with their ads. The workflow checks the connection with whoami, reads the client and its connected accounts, the agency kit with the last 30 days of results, the campaign list, open alerts and pending proposals, then reports findings by severity with the evidence for each and a list of what could not be checked. Findings that need a change go through propose_campaign_change after the person confirms, never as a direct edit.
+description: Workflow for auditing one client's advertising account through the ADS Beast workspace server. Use this when someone asks for an audit, a health check, a review of an account or client, or asks what is wrong with their ads. The workflow checks the connection with whoami, reads the client, its connected accounts and how fresh the data is, runs audit_campaign_portfolio and the platform audits (audit_google_ads, audit_meta_ads or audit_account), cross-checks alerts, rejected ads and pending proposals, then reports findings by severity with the evidence for each and a list of what could not be checked. A change is never a direct edit: it is prepared as a preview, shown to the person, and submitted with execute_prepared_change only after they confirm.
 ---
 
 # Account audit
@@ -30,18 +30,27 @@ could not show.
    days of results per account and campaign, leads by stage, the KPI goals
    and the write policy. Read the write policy: it says whether changes are
    allowed at all for this client.
-5. Call `list_campaigns` with the `client_id`. Walk the pages while
-   `has_more` is true. Group by platform and status.
-6. For campaigns that look off (spend without results, a budget far from
-   the rest, a status that contradicts delivery), call `get_campaign` for the
-   detail.
-7. Call `list_alerts` with the `client_id` and `is_resolved` false. An open
-   critical alert is a finding by itself.
-8. Call `list_proposals` with the `client_id`. A change that is already
-   waiting for approval must not be proposed again.
-9. Call `lead_pipeline_stats` with the `client_id` if the key has
-   `read:leads`. Results that stop at "lead" and never reach a later stage
-   are a finding about lead quality, not about traffic.
+5. Call `client_data_freshness` with the `client_id`. If a platform was
+   last synced long ago, every finding about it carries that date.
+6. Call `audit_campaign_portfolio` with the `client_id`. It scores every
+   campaign and names the ones in a critical state, without conversions,
+   without goals or with stale data. This decides where to look deeper.
+7. Run the platform audit that matches the connected accounts:
+   `audit_google_ads` for Google, `audit_meta_ads` for Meta, `audit_account`
+   with a `platform` for the others or for all at once. These take up to
+   half a minute each. Do not run them twice because the first was slow.
+8. Call `audit_ad_disapprovals` with the `client_id` for ads the platforms
+   rejected, with the reason.
+9. For single campaigns that stand out, call `campaign_analyze` or
+   `get_campaign` for the detail. `list_campaigns` gives the plain list
+   when it is needed; walk its pages while `has_more` is true.
+10. Call `list_alerts` with the `client_id` and `is_resolved` false. An open
+    critical alert is a finding by itself.
+11. Call `list_proposals` with the `client_id`. A change that is already
+    waiting for approval must not be prepared again.
+12. Call `lead_pipeline_stats` with the `client_id` if the key has
+    `read:leads`. Results that stop at "lead" and never reach a later stage
+    are a finding about lead quality, not about traffic.
 
 ## What to look for
 
@@ -65,11 +74,14 @@ decision-readiness check is the right gate before a pause is suggested.
 - Findings ordered critical, warning, note. Each one: what was observed, the
   figure with its currency, the campaign it concerns, the suggested action.
 - A separate list: not checked, and why (scope missing, account not
-  connected, data not exposed by this server). Search terms, keyword-level
-  quality and creative-level results are not exposed by this server today;
-  do not imply they were reviewed.
-- If the person wants a suggested change made: confirm it with them, then
-  call `propose_campaign_change` with the reason and the figures.
+  connected, an audit that was refused or returned nothing). The search
+  terms report is not exposed by this server; do not imply it was reviewed.
+- An audit score is the tool's own; quote it as such, with the problems
+  behind it, and do not invent a score of your own.
+- If the person wants a suggested change made: call
+  `prepare_campaign_pause` or `prepare_campaign_budget_change` with the
+  reason and the figures, show the preview, and on their yes call
+  `execute_prepared_change`. Then say where it stands.
 
 ## Safety rules
 
@@ -82,21 +94,34 @@ These apply to every step above.
    dollar sign on a figure because it is a number, never add up figures from
    accounts in different currencies, and name the currency next to every
    amount you report. If the currency is not in the data, say it is unknown.
-3. Never retry a failed create. If `create_campaign_draft`,
-   `propose_campaign_change`, `create_webhook` or a non-dry-run
-   `push_lead_outcomes` returns an error or times out, do not send it again.
-   Look first (`list_campaign_drafts`, `list_proposals`, `list_webhooks`) to
-   see whether the record exists, then report what you found. A repeated
-   create is how duplicates and double changes happen.
-4. Confirm before anything that affects spend. Show the person the exact
-   change (campaign, current value, new value, currency, reason) and wait for
-   a clear yes in the conversation before calling `propose_campaign_change`
-   or creating a draft with a budget. Their yes creates a proposal or a
-   draft; it does not change the ad account.
-5. This server cannot approve, publish or activate. A proposal waits for a
-   person in ADS Beast, a draft is published by a person in the campaign
-   builder, and a published campaign is uploaded paused. Say this plainly
-   instead of reporting a change as done.
+   Budgets are whole units of that currency, never cents or micros.
+3. Never retry a failed create. If `execute_prepared_change`,
+   `create_campaign_draft`, `create_webhook` or a non-dry-run
+   `push_lead_outcomes` returns an error or times out, do not send it again
+   and do not prepare the same change a second time. Look first:
+   `get_prepared_change` with the same `preview_id`, `list_proposals`,
+   `list_campaign_drafts`, `list_webhooks`. Then report what you found. A
+   repeated create is how duplicates and double changes happen.
+4. Confirm before anything that affects spend. A change to an ad account
+   takes two calls. A prepare tool stores a preview of exactly that change
+   and returns a `preview_id` that works once, for 15 minutes. Show the
+   person the preview (campaign, current value, new value, currency,
+   reason) and wait for a clear yes in the conversation. Only then call
+   `execute_prepared_change` with that id. Never prepare and execute in one
+   breath.
+5. Executing is not applying. After `execute_prepared_change` the change
+   waits for a person to approve it in ADS Beast, unless the client's own
+   write policy applies that kind of change automatically; the reply says
+   which. This server cannot approve, and it cannot switch a campaign on
+   without a person. If the preview's `write_control` lists `blocked_by`
+   (emergency stop, observe-only mode and similar), say that the change can
+   be queued but will not run until that is lifted. Report the real state
+   from `get_prepared_change`, never "done" on your own word.
 6. Empty is not healthy. An empty list can mean no access, no connected
    account or no synced data. Report it as "nothing returned" and name what
    was not checked. Do not turn a missing figure into zero.
+7. A key bound to a single client is refused (403) by the audit and
+   analytics tools. Pausing, enabling, a budget change and negative
+   keywords still work with it. When that happens, fall back to
+   `get_agency_kit`, `list_campaigns` and `get_campaign`, and say that the
+   deeper analysis was not available to this key.

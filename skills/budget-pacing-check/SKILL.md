@@ -1,6 +1,6 @@
 ---
 name: budget-pacing-check
-description: Workflow for checking whether advertising budgets are on pace, using the ADS Beast workspace server. Use this when someone asks whether a client will overspend or underspend this month, how much budget is left, or which campaigns are running hot. The workflow checks the connection with whoami, reads the client budget and connected accounts, the campaign budgets and spend through list_campaigns and get_campaign, the 30-day results in get_agency_kit and open budget alerts, then reports pace per account in that account's currency. A budget change is only ever created as a proposal with propose_campaign_change after the person confirms the exact new amount.
+description: Workflow for checking whether advertising budgets are on pace, using the ADS Beast workspace server. Use this when someone asks whether a client will overspend or underspend this month, how much budget is left, or which campaigns are running hot. The workflow checks the connection with whoami, reads the client budget and connected accounts, how fresh the data is, spend through analytics_summary and the campaign tools, the trend in analytics_forecast and open budget alerts, then reports pace per account in that account's currency. A budget change is prepared with prepare_campaign_budget_change, shown as a preview with the exact amount, and submitted with execute_prepared_change only after the person confirms.
 ---
 
 # Budget pacing check
@@ -9,8 +9,8 @@ Answer one question per client: at the current rate, does the budget last
 the period, run out early, or go unspent.
 
 There is no dedicated pacing tool on this server. Pace is worked out from
-the budget and spend figures the campaign and client tools return, so the
-answer is only as fresh as the last sync, and it says so.
+the budget and spend figures the client, campaign and analytics tools
+return, so the answer is only as fresh as the last sync, and it says so.
 
 ## When to use
 
@@ -25,26 +25,35 @@ answer is only as fresh as the last sync, and it says so.
    proposed.
 2. Call `get_client` for the client's budget, its period and the connected
    accounts with their currencies.
-3. Call `get_agency_kit` for spend over the last 30 days per account and
+3. Call `client_data_freshness` with the `client_id`. Pace computed from
+   data that is days old is reported with that date, or not at all.
+4. Call `analytics_summary` with the `client_id` and `days` set to the days
+   elapsed in the period, per `platform` where the accounts differ in
+   currency. Use `list_campaigns` and `get_campaign` for the budget of each
    campaign.
-4. Call `list_campaigns` with the `client_id`, all pages, and
-   `get_campaign` where a row lacks budget or spend detail.
 5. Work out pace per account, in that account's currency:
    - spent so far in the period against the budget for the period;
    - share of the period elapsed against share of the budget spent;
    - projected spend at the current daily rate.
    State the dates used. If the data does not say which period a spend
    figure covers, say that and do not project from it.
-6. Call `list_alerts` with the `client_id` and `is_resolved` false. Budget,
+6. Call `analytics_forecast` and `analytics_forecast_warnings` with the
+   `client_id`. They extrapolate the recent trend. Present them as a
+   projection, labelled as one, next to your own arithmetic; where the two
+   disagree, show both.
+7. Call `list_alerts` with the `client_id` and `is_resolved` false. Budget,
    billing and delivery alerts change the reading: an account that stopped
    delivering is not "under pace", it is stopped.
-7. Call `list_proposals` for the client. A budget change already waiting is
+8. Call `list_proposals` for the client. A budget change already waiting is
    part of the picture.
-8. Report, then stop. Only if the person asks for a change: agree the
-   campaign and the exact new amount, repeat it back with the currency, and
-   on their yes call `propose_campaign_change` with `change_budget`,
-   `new_budget` and a reason with the figures. `new_budget` is a monthly
-   budget in the account currency.
+9. Report, then stop. Only if the person asks for a change: agree the
+   campaign and the exact new amount, then call
+   `prepare_campaign_budget_change` with `new_monthly_budget` and a reason
+   with the figures. `new_monthly_budget` is per month, in whole units of
+   the account currency. The preview shows the daily amount and the exact
+   figure the platform will receive: read both back to the person. On
+   their yes call `execute_prepared_change` with the `preview_id`, then
+   `get_prepared_change` for the state.
 
 ## Reading the result
 
@@ -61,7 +70,7 @@ answer is only as fresh as the last sync, and it says so.
 - Alerts and pending proposals that affect the reading.
 - How fresh the figures are, if the data says; otherwise that freshness is
   unknown.
-- Proposal ids, if any were created, and that they wait for approval.
+- Changes submitted, if any, and the state of each.
 
 ## Safety rules
 
@@ -74,21 +83,34 @@ These apply to every step above.
    dollar sign on a figure because it is a number, never add up figures from
    accounts in different currencies, and name the currency next to every
    amount you report. If the currency is not in the data, say it is unknown.
-3. Never retry a failed create. If `create_campaign_draft`,
-   `propose_campaign_change`, `create_webhook` or a non-dry-run
-   `push_lead_outcomes` returns an error or times out, do not send it again.
-   Look first (`list_campaign_drafts`, `list_proposals`, `list_webhooks`) to
-   see whether the record exists, then report what you found. A repeated
-   create is how duplicates and double changes happen.
-4. Confirm before anything that affects spend. Show the person the exact
-   change (campaign, current value, new value, currency, reason) and wait for
-   a clear yes in the conversation before calling `propose_campaign_change`
-   or creating a draft with a budget. Their yes creates a proposal or a
-   draft; it does not change the ad account.
-5. This server cannot approve, publish or activate. A proposal waits for a
-   person in ADS Beast, a draft is published by a person in the campaign
-   builder, and a published campaign is uploaded paused. Say this plainly
-   instead of reporting a change as done.
+   Budgets are whole units of that currency, never cents or micros.
+3. Never retry a failed create. If `execute_prepared_change`,
+   `create_campaign_draft`, `create_webhook` or a non-dry-run
+   `push_lead_outcomes` returns an error or times out, do not send it again
+   and do not prepare the same change a second time. Look first:
+   `get_prepared_change` with the same `preview_id`, `list_proposals`,
+   `list_campaign_drafts`, `list_webhooks`. Then report what you found. A
+   repeated create is how duplicates and double changes happen.
+4. Confirm before anything that affects spend. A change to an ad account
+   takes two calls. A prepare tool stores a preview of exactly that change
+   and returns a `preview_id` that works once, for 15 minutes. Show the
+   person the preview (campaign, current value, new value, currency,
+   reason) and wait for a clear yes in the conversation. Only then call
+   `execute_prepared_change` with that id. Never prepare and execute in one
+   breath.
+5. Executing is not applying. After `execute_prepared_change` the change
+   waits for a person to approve it in ADS Beast, unless the client's own
+   write policy applies that kind of change automatically; the reply says
+   which. This server cannot approve, and it cannot switch a campaign on
+   without a person. If the preview's `write_control` lists `blocked_by`
+   (emergency stop, observe-only mode and similar), say that the change can
+   be queued but will not run until that is lifted. Report the real state
+   from `get_prepared_change`, never "done" on your own word.
 6. Empty is not healthy. An empty list can mean no access, no connected
    account or no synced data. Report it as "nothing returned" and name what
    was not checked. Do not turn a missing figure into zero.
+7. A key bound to a single client is refused (403) by the audit and
+   analytics tools. Pausing, enabling, a budget change and negative
+   keywords still work with it. When that happens, fall back to
+   `get_agency_kit`, `list_campaigns` and `get_campaign`, and say that the
+   deeper analysis was not available to this key.

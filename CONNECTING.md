@@ -181,16 +181,25 @@ curl -s https://adsbeast.pro/api/mcp/workspace \
 | Symptom | Meaning |
 | --- | --- |
 | 401 on every tool call | No key reached the server, or the key was revoked. Check the environment variable in the process that starts the client. |
-| 403 on one tool | The key lacks that tool's scope. `whoami` shows what it has; an admin issues a key with the missing scope. |
+| 403 on one tool | The key lacks that tool's scope, or it is bound to one client and the tool is an audit or analytics tool. `whoami` shows what it has; an admin issues a key with the missing scope. |
 | 404 on a record you can see in the dashboard | The key is bound to a different client or organization. |
 | Tools are listed but every call fails | The catalogue answers without a key on purpose. A listing is not proof of a working key. |
 | The client opens a browser sign-in that fails | The client is trying OAuth. Configure the header instead. |
 
 ## What an assistant can and cannot do
 
-It can read what the key's scopes allow, update leads, write lead outcomes
-(dry run first), create change proposals and build campaign drafts.
+It can read what the key's scopes allow, run audits and analytics, update
+leads, write lead outcomes (dry run first), build campaign drafts, and
+submit changes to an ad account in two steps: a prepare tool stores a
+preview, and `execute_prepared_change` submits that preview and nothing
+else.
 
-It cannot approve a proposal, publish a draft, activate a campaign, or reach
-billing, settings and platform credentials. Those stay with a person in ADS
-Beast.
+It cannot approve a change, switch a campaign on without a person, or reach
+billing, settings and platform credentials. A submitted change waits for a
+person in ADS Beast unless the client's write policy applies it. New
+campaigns are created paused.
+
+A key bound to a single client is refused (403) by the audit and analytics
+tools. It can still read that client's data and prepare a pause, an enable,
+a budget change and negative keywords. For the full set use a key that is
+not bound to one client.

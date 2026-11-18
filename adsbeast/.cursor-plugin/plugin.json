@@ -1,6 +1,6 @@
 {
   "name": "adsbeast",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "description": "Your ADS Beast advertising workspace: campaigns, leads with attribution, alerts, reports, change proposals and campaign drafts for human approval. Requires an ADS Beast account and a scoped API key.",
   "author": {
     "name": "Denha Nexus s.r.o."

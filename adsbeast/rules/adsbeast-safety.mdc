@@ -11,17 +11,20 @@ alwaysApply: false
 2. Amounts are in the currency of the ad account they came from. Name the
    currency next to every figure. Never add up figures from accounts in
    different currencies and never assume dollars.
-3. Never retry a failed create. If `create_campaign_draft`,
-   `propose_campaign_change`, `create_webhook` or a non-dry-run
+3. Never retry a failed create. If `execute_prepared_change`,
+   `create_campaign_draft`, `create_webhook` or a non-dry-run
    `push_lead_outcomes` errors or times out, look first with
-   `list_campaign_drafts`, `list_proposals` or `list_webhooks`, then report
+   `get_prepared_change`, `list_campaign_drafts`, `list_proposals` or
+   `list_webhooks`, then report
    what exists.
-4. Confirm before anything that affects spend. Show the exact change with
-   the current value, the new value and the currency, and wait for a clear
-   yes.
-5. The server cannot approve, publish or activate. A proposal waits for a
-   person in ADS Beast; a campaign draft is published by a person and is
-   uploaded paused. Do not report a change as done.
+4. Confirm before anything that affects spend. A change takes two calls:
+   a prepare tool stores a preview and returns a `preview_id` (single use,
+   15 minutes). Show the preview with the current value, the new value and
+   the currency, wait for a clear yes, then call `execute_prepared_change`.
+5. Executing is not applying. The change then waits for a person to
+   approve it in ADS Beast unless the client's write policy applies it; the
+   server cannot approve, and a new campaign is created paused. Report the
+   state from `get_prepared_change`, never "done" on your own word.
 6. An empty list is not a clean result. Say nothing was returned and name
    what was not checked.
 7. Use the matching skill for multi-step work (account-audit,

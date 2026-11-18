@@ -1,6 +1,6 @@
 ---
 name: conversion-tracking-check
-description: Workflow for checking whether a client's conversion tracking is plausible, using the ADS Beast workspace server. Use this when someone asks if tracking works, why conversions are zero or dropped, whether leads are being counted, or before judging campaign performance. The workflow checks the connection with whoami, then compares three things the server holds: results the ad platforms report in get_agency_kit and list_campaigns, leads that actually arrived through get_new_leads with their attribution, and open tracking alerts. It reports where they disagree and what each disagreement suggests. It does not inspect tags on the website or settings inside the ad platform.
+description: Workflow for checking whether a client's conversion tracking is plausible, using the ADS Beast workspace server. Use this when someone asks if tracking works, why conversions are zero or dropped, whether leads are being counted, or before judging campaign performance. The workflow checks the connection with whoami, runs audit_tracking for pixel, GA4 and tag mismatches and audit_conversion_goals for what the campaigns optimise on, then compares what the platforms report with the leads that actually arrived through get_new_leads and their attribution. It reports what agrees, what does not and what each disagreement suggests. Creating a missing conversion action is a prepared change that the person confirms.
 ---
 
 # Conversion-tracking check
@@ -9,10 +9,10 @@ Before anyone judges a campaign, check that its results are being counted.
 A campaign with broken tracking looks exactly like a campaign that does not
 work.
 
-What this server can do is compare evidence it already holds. It cannot
-open the website, fire a test event or read conversion settings inside the
-ad platform. The result is a statement of what agrees, what does not and
-what a person has to check by hand.
+The server runs its own tracking diagnostics and can compare them with the
+leads it holds. It cannot fire a test event or submit a test lead. The
+result is a statement of what agrees, what does not and what a person has
+to check by hand.
 
 ## When to use
 
@@ -24,14 +24,20 @@ what a person has to check by hand.
 ## Steps
 
 1. Call `whoami`. Needs `read:clients`, `read:campaigns`, `read:leads`,
-   `read:alerts`.
+   `read:alerts`; `write:proposals` only if something will be created.
 2. Call `get_client` with the `client_id`: which ad accounts are connected.
    A platform that is not connected reports nothing; that is not a tracking
    fault.
-3. Call `get_agency_kit` for the conversions the platforms reported over
-   the last 30 days, per account and campaign, and for the client's goals.
-4. Call `list_campaigns` with the `client_id`. List campaigns that spend
-   and report zero conversions.
+3. Call `audit_tracking` with the `client_id`: pixel, GA4 and tag
+   mismatches on the landing page, conversion actions and the other
+   tracking guards, in one report.
+4. Call `audit_conversion_goals` with the `client_id`: which conversions
+   are primary, whether calls and forms are counted, and campaigns that
+   optimise for the wrong goal. For one named conversion in Google Ads,
+   `google_ads_conversion_tracking_check` with the `client_id` and its
+   `name` says which existing action fits or what would have to be created.
+   Then `get_agency_kit` for the conversions reported over the last 30
+   days and `list_campaigns` for campaigns that spend and report none.
 5. Call `lead_pipeline_stats` with the `client_id` and `days` 30, and
    `get_new_leads` with `since` 30 days back. Look at the attribution on the
    leads: UTM values, click ids, platform form and campaign ids.
@@ -55,6 +61,11 @@ what a person has to check by hand.
    only knows "lead"), point to `lead_outcome_contract` and
    `push_lead_outcomes`: that is the loop that teaches the platform which
    leads became customers. Do not run a push as part of a check.
+10. If a Google conversion action is missing and the person wants it
+    created: `prepare_google_conversion_action_create` with the
+    `client_id`, a `name` and a `reason`, show the preview, and on their
+    yes `execute_prepared_change`. The result carries tag code that
+    someone still has to put on the site; say so.
 
 ## Reading the result
 
@@ -68,9 +79,10 @@ as zero; say which one it is.
 - Each disagreement with its likely cause and the manual check that would
   confirm it (open the conversion action in the platform, submit a test
   lead, look at the tag on the thank-you page).
-- What was not checked: tags, consent mode, conversion settings, offline
-  imports. These are not visible from this server.
-- No change is made by this workflow.
+- What was not checked: a live test event, consent mode behaviour, offline
+  imports. Say which of the audits ran and which were refused or empty.
+- Any change submitted, with its state from `get_prepared_change`.
+  Otherwise: no change was made.
 
 ## Safety rules
 
@@ -83,21 +95,34 @@ These apply to every step above.
    dollar sign on a figure because it is a number, never add up figures from
    accounts in different currencies, and name the currency next to every
    amount you report. If the currency is not in the data, say it is unknown.
-3. Never retry a failed create. If `create_campaign_draft`,
-   `propose_campaign_change`, `create_webhook` or a non-dry-run
-   `push_lead_outcomes` returns an error or times out, do not send it again.
-   Look first (`list_campaign_drafts`, `list_proposals`, `list_webhooks`) to
-   see whether the record exists, then report what you found. A repeated
-   create is how duplicates and double changes happen.
-4. Confirm before anything that affects spend. Show the person the exact
-   change (campaign, current value, new value, currency, reason) and wait for
-   a clear yes in the conversation before calling `propose_campaign_change`
-   or creating a draft with a budget. Their yes creates a proposal or a
-   draft; it does not change the ad account.
-5. This server cannot approve, publish or activate. A proposal waits for a
-   person in ADS Beast, a draft is published by a person in the campaign
-   builder, and a published campaign is uploaded paused. Say this plainly
-   instead of reporting a change as done.
+   Budgets are whole units of that currency, never cents or micros.
+3. Never retry a failed create. If `execute_prepared_change`,
+   `create_campaign_draft`, `create_webhook` or a non-dry-run
+   `push_lead_outcomes` returns an error or times out, do not send it again
+   and do not prepare the same change a second time. Look first:
+   `get_prepared_change` with the same `preview_id`, `list_proposals`,
+   `list_campaign_drafts`, `list_webhooks`. Then report what you found. A
+   repeated create is how duplicates and double changes happen.
+4. Confirm before anything that affects spend. A change to an ad account
+   takes two calls. A prepare tool stores a preview of exactly that change
+   and returns a `preview_id` that works once, for 15 minutes. Show the
+   person the preview (campaign, current value, new value, currency,
+   reason) and wait for a clear yes in the conversation. Only then call
+   `execute_prepared_change` with that id. Never prepare and execute in one
+   breath.
+5. Executing is not applying. After `execute_prepared_change` the change
+   waits for a person to approve it in ADS Beast, unless the client's own
+   write policy applies that kind of change automatically; the reply says
+   which. This server cannot approve, and it cannot switch a campaign on
+   without a person. If the preview's `write_control` lists `blocked_by`
+   (emergency stop, observe-only mode and similar), say that the change can
+   be queued but will not run until that is lifted. Report the real state
+   from `get_prepared_change`, never "done" on your own word.
 6. Empty is not healthy. An empty list can mean no access, no connected
    account or no synced data. Report it as "nothing returned" and name what
    was not checked. Do not turn a missing figure into zero.
+7. A key bound to a single client is refused (403) by the audit and
+   analytics tools. Pausing, enabling, a budget change and negative
+   keywords still work with it. When that happens, fall back to
+   `get_agency_kit`, `list_campaigns` and `get_campaign`, and say that the
+   deeper analysis was not available to this key.

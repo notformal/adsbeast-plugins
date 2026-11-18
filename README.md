@@ -10,7 +10,7 @@ and ask.
 
 | Plugin | Server | What it does | Account |
 | --- | --- | --- | --- |
-| [adsbeast](./adsbeast) | `https://adsbeast.pro/api/mcp/workspace` | Your own workspace: clients, campaigns, leads with attribution, alerts, reports, change proposals, campaign drafts. | Yes |
+| [adsbeast](./adsbeast) | `https://adsbeast.pro/api/mcp/workspace` | Your own workspace: account audits, analytics, campaigns, leads with attribution, alerts, reports, campaign drafts, and changes that run only from a preview you approved. | Yes |
 | [ad-spec-guard](./ad-spec-guard) | `https://adsbeast.pro/api/mcp` | Ad platform character limits, creative specs, statistical gates before pausing or scaling, UTM tagging, policy pre-checks. | No |
 
 Both servers speak MCP over streamable HTTP.
@@ -41,9 +41,12 @@ The live list is always the server's own: `tools/list` answers without a key.
 | --- | --- | --- |
 | Diagnostics | `whoami` | no |
 | Clients | `list_clients`, `get_client`, `get_agency_kit` | no |
-| Campaigns | `list_campaigns`, `get_campaign`, `campaign_dashboard_summary` | no |
-| Change proposals | `list_proposals`, `propose_campaign_change`, `reject_proposal` | proposals only |
-| Campaign drafts | `list_campaign_types`, `create_campaign_draft`, `update_campaign_draft`, `get_campaign_draft`, `list_campaign_drafts` | drafts only |
+| Campaigns | `list_campaigns`, `get_campaign`, `campaign_dashboard_summary`, `campaign_analyze` | no |
+| Audits | `audit_account`, `audit_google_ads`, `audit_meta_ads`, `audit_wasted_spend`, `audit_tracking`, `audit_conversion_goals`, `audit_campaign_portfolio` | no |
+| Analytics | `analytics_summary`, `analytics_compare_periods`, `analytics_forecast`, `client_data_freshness` | no |
+| Changes, in two steps | `prepare_campaign_pause`, `prepare_campaign_budget_change`, `prepare_negative_keywords_add`, `prepare_campaign_draft_publish`, then `execute_prepared_change` and `get_prepared_change` | only from a stored preview |
+| Proposals | `list_proposals`, `reject_proposal` | reject only |
+| Campaign drafts | `list_campaign_types`, `create_campaign_draft`, `update_campaign_draft`, `get_campaign_draft`, `list_campaign_drafts`, `campaign_draft_publish_check` | drafts only |
 | Leads | `get_new_leads`, `get_lead`, `lead_pipeline_stats`, `update_lead`, `move_lead_stage` | yes |
 | Conversion outcomes | `lead_outcome_contract`, `push_lead_outcomes` | yes, dry run by default |
 | Alerts, tasks, reports | `list_alerts`, `alerts_unread_count`, `list_tasks`, `list_reports` | no |
@@ -88,12 +91,19 @@ Ad Spec Guard needs no authentication.
 
 - Read tools and write tools are separate, and every tool declares whether it
   is read-only or destructive.
-- An assistant cannot change an ad account directly. A campaign change is a
-  proposal that a person approves in ADS Beast. A new campaign is a draft
-  that a person publishes from the campaign builder; it is uploaded paused
-  and activation is approved separately.
-- An integration key cannot approve, publish, roll back, or reach billing,
-  settings and platform credentials.
+- A change to an ad account runs only from a stored preview. A prepare
+  tool saves exactly what would change and returns a preview id that works
+  once, for 15 minutes. `execute_prepared_change` takes that id and nothing
+  else, so what runs cannot differ from what was shown. A preview is
+  refused if the campaign changed in the meantime.
+- After that the change waits for a person to approve it in ADS Beast,
+  unless the client's own write policy applies that kind of change
+  automatically. Switching a campaign on always waits for a person.
+- A new campaign is created paused.
+- An integration key cannot approve, roll back, or reach billing, settings
+  and platform credentials. A key bound to a single client can prepare a
+  pause, an enable, a budget change and negative keywords; the audit and
+  analytics tools refuse it.
 - Writing lead outcomes defaults to a dry run.
 - A key can be bound to a single client, and can be revoked at any time under
   API Keys.

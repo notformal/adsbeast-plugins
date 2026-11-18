@@ -22,16 +22,20 @@ This extension connects two MCP servers run by ADS Beast.
 3. Amounts are in the currency of the ad account they came from. Name the
    currency next to every figure. Never add up figures from accounts in
    different currencies and never assume dollars.
-4. Never retry a failed create. If `create_campaign_draft`,
-   `propose_campaign_change`, `create_webhook` or a non-dry-run
+4. Never retry a failed create. If `execute_prepared_change`,
+   `create_campaign_draft`, `create_webhook` or a non-dry-run
    `push_lead_outcomes` errors or times out, look first with
-   `list_campaign_drafts`, `list_proposals` or `list_webhooks`, then report.
-5. Confirm before anything that affects spend. Show the exact change with
-   current value, new value and currency, and wait for a clear yes.
-6. This server cannot approve, publish or activate anything. A proposal
-   waits for a person in ADS Beast. A campaign draft is published by a person
-   in the campaign builder and is uploaded paused. Say that plainly; do not
-   report a change as done.
+   `get_prepared_change`, `list_campaign_drafts`, `list_proposals` or
+   `list_webhooks`, then report.
+5. Confirm before anything that affects spend. A change takes two calls:
+   a prepare tool stores a preview and returns a `preview_id` (single use,
+   15 minutes). Show the preview with current value, new value and
+   currency, wait for a clear yes, then call `execute_prepared_change`.
+6. Executing is not applying. The change waits for a person to approve it
+   in ADS Beast unless the client's write policy applies it. This server
+   cannot approve, and a new campaign is created paused. Report the state
+   from `get_prepared_change`; do not report a change as done on your own
+   word.
 7. An empty list is not a clean bill of health. Report it as nothing
    returned and say what was not checked.
 

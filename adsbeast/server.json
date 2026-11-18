@@ -2,8 +2,8 @@
   "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
   "name": "io.github.notformal/adsbeast",
   "title": "ADS Beast",
-  "description": "Ad operations workspace: campaigns, leads, alerts, reports and campaign drafts for human approval.",
-  "version": "1.1.0",
+  "description": "Ad account audits, analytics, leads and campaign changes that run only from an approved preview.",
+  "version": "1.2.0",
   "websiteUrl": "https://adsbeast.pro",
   "repository": {
     "url": "https://github.com/notformal/adsbeast-plugins",
@@ -15,7 +15,9 @@
     {
       "src": "https://raw.githubusercontent.com/notformal/adsbeast-plugins/main/adsbeast/assets/logo.svg",
       "mimeType": "image/svg+xml",
-      "sizes": ["any"]
+      "sizes": [
+        "any"
+      ]
     }
   ],
   "remotes": [

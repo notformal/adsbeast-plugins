@@ -1,6 +1,6 @@
 ---
 name: weekly-report
-description: Workflow for preparing a weekly advertising summary for one client from the ADS Beast workspace server. Use this when someone asks for a weekly report, a status update for a client, a summary of what happened this week, or what to tell the client. The workflow checks the connection with whoami, reads reports already generated in ADS Beast with list_reports, the client's results in get_agency_kit, campaigns, alerts, proposals, tasks and the lead pipeline, and writes a short factual summary with amounts in the account currency. It reports only figures the tools returned and names the period each one covers. It does not generate or send a report document.
+description: Workflow for preparing a weekly advertising summary for one client from the ADS Beast workspace server. Use this when someone asks for a weekly report, a status update for a client, a summary of what happened this week, or what to tell the client. The workflow checks the connection with whoami, reads the week's figures with analytics_summary and the change against the week before with analytics_compare_periods, then alerts, proposals, tasks and the lead pipeline, and writes a short factual summary with amounts in the account currency. It reports only figures the tools returned and names the period each one covers. With the person's agreement it saves the text in ADS Beast with report_create. It does not email anything to the client.
 ---
 
 # Weekly report
@@ -9,9 +9,9 @@ A one-page status for one client: results, what changed, what is waiting,
 what happens next. Written from what the server returns, with no figure
 that cannot be traced to a tool reply.
 
-This server reads reports that ADS Beast already generated; it has no tool
-that creates or sends one. The output of this workflow is text in the
-conversation for a person to review and send.
+The output is text in the conversation for a person to review. It can be
+saved to the client's reports in ADS Beast. Sending it to the client stays
+with the person.
 
 ## When to use
 
@@ -26,10 +26,11 @@ conversation for a person to review and send.
    the sections that were skipped.
 2. Call `list_reports` with the `client_id`. If a recent report covers the
    week, build on it and say which report and period it is.
-3. Call `get_agency_kit` with the `client_id` for goals and the last 30
-   days of results. This is a 30-day window, not a 7-day one. Do not present
-   30-day figures as the week. If no tool returned a 7-day figure, the
-   report says "last 30 days" where it uses them.
+3. Call `analytics_summary` with the `client_id` and `days` 7 for the
+   week's spend and results, and `analytics_compare_periods` with
+   `current_days` 7 and `previous_days` 7 for what moved. Call
+   `get_agency_kit` for the goals. Its results cover 30 days: do not
+   present a 30-day figure as the week.
 4. Call `list_campaigns` with the `client_id` for what is running, paused
    and new.
 5. Call `list_alerts` with the `client_id`: what fired this week and what is
@@ -41,7 +42,11 @@ conversation for a person to review and send.
    the start of the week gives the new ones; report counts and sources, not
    names or phone numbers.
 8. Call `list_tasks` with the `client_id` for work done and work open.
-9. Write the summary.
+9. Write the summary and show it.
+10. If the person wants it kept, call `report_create` with the `client_id`,
+    a `title` and the text as `content`. Always pass `content`: without it
+    the tool generates its own 30-day summary instead of saving yours. It
+    needs `write:proposals`. Call it once.
 
 ## Shape of the report
 
@@ -66,8 +71,8 @@ conversation for a person to review and send.
 ## Reporting the result
 
 The summary itself, followed by a short note to the person: which period
-each block covers, which sections were skipped and why, and that nothing
-was sent to the client.
+each block covers, which sections were skipped and why, whether it was
+saved in ADS Beast, and that nothing was sent to the client.
 
 ## Safety rules
 
@@ -80,21 +85,34 @@ These apply to every step above.
    dollar sign on a figure because it is a number, never add up figures from
    accounts in different currencies, and name the currency next to every
    amount you report. If the currency is not in the data, say it is unknown.
-3. Never retry a failed create. If `create_campaign_draft`,
-   `propose_campaign_change`, `create_webhook` or a non-dry-run
-   `push_lead_outcomes` returns an error or times out, do not send it again.
-   Look first (`list_campaign_drafts`, `list_proposals`, `list_webhooks`) to
-   see whether the record exists, then report what you found. A repeated
-   create is how duplicates and double changes happen.
-4. Confirm before anything that affects spend. Show the person the exact
-   change (campaign, current value, new value, currency, reason) and wait for
-   a clear yes in the conversation before calling `propose_campaign_change`
-   or creating a draft with a budget. Their yes creates a proposal or a
-   draft; it does not change the ad account.
-5. This server cannot approve, publish or activate. A proposal waits for a
-   person in ADS Beast, a draft is published by a person in the campaign
-   builder, and a published campaign is uploaded paused. Say this plainly
-   instead of reporting a change as done.
+   Budgets are whole units of that currency, never cents or micros.
+3. Never retry a failed create. If `execute_prepared_change`,
+   `create_campaign_draft`, `create_webhook` or a non-dry-run
+   `push_lead_outcomes` returns an error or times out, do not send it again
+   and do not prepare the same change a second time. Look first:
+   `get_prepared_change` with the same `preview_id`, `list_proposals`,
+   `list_campaign_drafts`, `list_webhooks`. Then report what you found. A
+   repeated create is how duplicates and double changes happen.
+4. Confirm before anything that affects spend. A change to an ad account
+   takes two calls. A prepare tool stores a preview of exactly that change
+   and returns a `preview_id` that works once, for 15 minutes. Show the
+   person the preview (campaign, current value, new value, currency,
+   reason) and wait for a clear yes in the conversation. Only then call
+   `execute_prepared_change` with that id. Never prepare and execute in one
+   breath.
+5. Executing is not applying. After `execute_prepared_change` the change
+   waits for a person to approve it in ADS Beast, unless the client's own
+   write policy applies that kind of change automatically; the reply says
+   which. This server cannot approve, and it cannot switch a campaign on
+   without a person. If the preview's `write_control` lists `blocked_by`
+   (emergency stop, observe-only mode and similar), say that the change can
+   be queued but will not run until that is lifted. Report the real state
+   from `get_prepared_change`, never "done" on your own word.
 6. Empty is not healthy. An empty list can mean no access, no connected
    account or no synced data. Report it as "nothing returned" and name what
    was not checked. Do not turn a missing figure into zero.
+7. A key bound to a single client is refused (403) by the audit and
+   analytics tools. Pausing, enabling, a budget change and negative
+   keywords still work with it. When that happens, fall back to
+   `get_agency_kit`, `list_campaigns` and `get_campaign`, and say that the
+   deeper analysis was not available to this key.

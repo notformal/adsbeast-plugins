@@ -64,11 +64,23 @@ In Claude Code they are also commands: `/adsbeast:audit`,
 
 ## Changes and campaigns
 
-The assistant cannot change an ad account. `propose_campaign_change` creates
-a proposal (pause, enable, budget) that a person approves in ADS Beast.
-`create_campaign_draft` builds a campaign as a draft in the campaign builder;
-a person publishes it, it is uploaded paused, and activation is approved
-separately.
+A change to an ad account takes two calls. A prepare tool
+(`prepare_campaign_pause`, `prepare_campaign_budget_change`,
+`prepare_negative_keywords_add`, `prepare_campaign_draft_publish` and
+others) stores a preview of exactly that change. `execute_prepared_change`
+submits that preview and takes no other argument. The change then waits for
+a person to approve it in ADS Beast, unless the client's write policy
+applies it. `get_prepared_change` reports what became of it.
+
+`create_campaign_draft` builds a campaign as a draft in the campaign
+builder. Published from a preview, it is created paused, and switching it
+on is a separate decision by a person.
+
+The server also runs audits (`audit_account`, `audit_wasted_spend`,
+`audit_tracking`) and analytics (`analytics_summary`,
+`analytics_compare_periods`). A key bound to a single client is refused by
+those; pausing, enabling, a budget change and negative keywords still work
+with it.
 
 ## Install
 

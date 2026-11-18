@@ -84,21 +84,34 @@ These apply to every step above.
    dollar sign on a figure because it is a number, never add up figures from
    accounts in different currencies, and name the currency next to every
    amount you report. If the currency is not in the data, say it is unknown.
-3. Never retry a failed create. If `create_campaign_draft`,
-   `propose_campaign_change`, `create_webhook` or a non-dry-run
-   `push_lead_outcomes` returns an error or times out, do not send it again.
-   Look first (`list_campaign_drafts`, `list_proposals`, `list_webhooks`) to
-   see whether the record exists, then report what you found. A repeated
-   create is how duplicates and double changes happen.
-4. Confirm before anything that affects spend. Show the person the exact
-   change (campaign, current value, new value, currency, reason) and wait for
-   a clear yes in the conversation before calling `propose_campaign_change`
-   or creating a draft with a budget. Their yes creates a proposal or a
-   draft; it does not change the ad account.
-5. This server cannot approve, publish or activate. A proposal waits for a
-   person in ADS Beast, a draft is published by a person in the campaign
-   builder, and a published campaign is uploaded paused. Say this plainly
-   instead of reporting a change as done.
+   Budgets are whole units of that currency, never cents or micros.
+3. Never retry a failed create. If `execute_prepared_change`,
+   `create_campaign_draft`, `create_webhook` or a non-dry-run
+   `push_lead_outcomes` returns an error or times out, do not send it again
+   and do not prepare the same change a second time. Look first:
+   `get_prepared_change` with the same `preview_id`, `list_proposals`,
+   `list_campaign_drafts`, `list_webhooks`. Then report what you found. A
+   repeated create is how duplicates and double changes happen.
+4. Confirm before anything that affects spend. A change to an ad account
+   takes two calls. A prepare tool stores a preview of exactly that change
+   and returns a `preview_id` that works once, for 15 minutes. Show the
+   person the preview (campaign, current value, new value, currency,
+   reason) and wait for a clear yes in the conversation. Only then call
+   `execute_prepared_change` with that id. Never prepare and execute in one
+   breath.
+5. Executing is not applying. After `execute_prepared_change` the change
+   waits for a person to approve it in ADS Beast, unless the client's own
+   write policy applies that kind of change automatically; the reply says
+   which. This server cannot approve, and it cannot switch a campaign on
+   without a person. If the preview's `write_control` lists `blocked_by`
+   (emergency stop, observe-only mode and similar), say that the change can
+   be queued but will not run until that is lifted. Report the real state
+   from `get_prepared_change`, never "done" on your own word.
 6. Empty is not healthy. An empty list can mean no access, no connected
    account or no synced data. Report it as "nothing returned" and name what
    was not checked. Do not turn a missing figure into zero.
+7. A key bound to a single client is refused (403) by the audit and
+   analytics tools. Pausing, enabling, a budget change and negative
+   keywords still work with it. When that happens, fall back to
+   `get_agency_kit`, `list_campaigns` and `get_campaign`, and say that the
+   deeper analysis was not available to this key.
