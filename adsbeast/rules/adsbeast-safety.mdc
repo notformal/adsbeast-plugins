@@ -22,7 +22,8 @@ alwaysApply: false
    15 minutes). Show the preview with the current value, the new value and
    the currency, wait for a clear yes, then call `execute_prepared_change`.
 5. Executing is not applying. The change then waits for a person to
-   approve it in ADS Beast unless the client's write policy applies it; the
+   approve it in ADS Beast unless the client's owner switched on assistant
+   auto-apply and the write policy allows it; the
    server cannot approve, and a new campaign is created paused. Report the
    state from `get_prepared_change`, never "done" on your own word.
 6. An empty list is not a clean result. Say nothing was returned and name

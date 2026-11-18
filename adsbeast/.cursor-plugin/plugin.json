@@ -1,6 +1,6 @@
 {
   "name": "adsbeast",
-  "version": "1.3.2",
+  "version": "1.3.3",
   "description": "Work with your own ADS Beast advertising workspace: account audits, wasted spend, tracking and budget checks, platform comparison, leads with attribution, and campaign changes that run only from a stored preview and wait for a person's approval. Twelve workflow skills. Requires an ADS Beast account and a scoped API key.",
   "author": {
     "name": "Denha Nexus s.r.o."

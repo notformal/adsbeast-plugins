@@ -35,12 +35,11 @@ their spend, their results or every ad they run.
    domain. Do not pick competitors yourself from general knowledge and
    present them as the client's market.
 5. For each named competitor, at most three unless the person asks for
-   more, call `competitor_site_analyze` with the `url`, the `client_id`
-   and `add_to_report` false. It reads the public site: selling points,
-   prices shown, calls to action, tracking pixels. This is observed, and
-   it is the most reliable part of the review. Pass `add_to_report` true
-   only if the person wants the result stored in the client's market
-   analysis in ADS Beast.
+   more, call `competitor_site_analyze` with the `url` and the
+   `client_id`. It reads the public site: selling points, prices shown,
+   calls to action, tracking pixels. This is observed, and it is the most
+   reliable part of the review. It never stores anything in the client's
+   market analysis; that is done in ADS Beast itself.
 6. Call `competitor_search_intel` with the `client_id`, the
    `competitor_domain` and `aspect` set to `ads` (or `pricing`,
    `positioning`). It returns web search results with titles, snippets
@@ -125,9 +124,10 @@ These apply to every step above.
    `execute_prepared_change` with that id. Never prepare and execute in one
    breath.
 5. Executing is not applying. After `execute_prepared_change` the change
-   waits for a person to approve it in ADS Beast, unless the client's own
-   write policy applies that kind of change automatically; the reply says
-   which. This server cannot approve, and it cannot switch a campaign on
+   waits for a person to approve it in ADS Beast, unless the client's owner
+   switched on assistant auto-apply for that client and its write policy
+   allows the change (pauses, budgets within limits, negatives only); the
+   reply says which. This server cannot approve, and it cannot switch a campaign on
    without a person. If the preview's `write_control` lists `blocked_by`
    (emergency stop, observe-only mode and similar), say that the change can
    be queued but will not run until that is lifted. Report the real state

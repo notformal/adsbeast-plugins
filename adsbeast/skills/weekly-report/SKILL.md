@@ -104,9 +104,10 @@ These apply to every step above.
    `execute_prepared_change` with that id. Never prepare and execute in one
    breath.
 5. Executing is not applying. After `execute_prepared_change` the change
-   waits for a person to approve it in ADS Beast, unless the client's own
-   write policy applies that kind of change automatically; the reply says
-   which. This server cannot approve, and it cannot switch a campaign on
+   waits for a person to approve it in ADS Beast, unless the client's owner
+   switched on assistant auto-apply for that client and its write policy
+   allows the change (pauses, budgets within limits, negatives only); the
+   reply says which. This server cannot approve, and it cannot switch a campaign on
    without a person. If the preview's `write_control` lists `blocked_by`
    (emergency stop, observe-only mode and similar), say that the change can
    be queued but will not run until that is lifted. Report the real state

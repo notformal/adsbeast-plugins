@@ -27,15 +27,13 @@ report, so the hunt says so instead of guessing at queries.
    average.
 4. Call `audit_wasted_spend` with the `client_id` and a `days` window. It
    returns campaigns with spend and no conversions or with a cost per
-   result far above target. Read the units: `total_spend` is in the account
-   currency, while `waste_estimate`, `total_waste` and the amounts inside
-   the reason texts are converted to US dollars. Report the spend in the
-   account currency and quote the estimate as an estimate in US dollars.
-   Two cases need a second look. When the account currency is unknown the
-   tool cannot value anything and answers that nothing was found: that is
-   "not evaluated", so check `audit_campaign_portfolio` for campaigns
-   without conversions before saying the account is clean. And a reach or
-   awareness campaign is listed for having no conversions although it was
+   result far above target. Every amount (`total_spend`, `waste_estimate`,
+   the reason texts and `total_waste_by_currency`) is in that campaign's
+   account currency, named by `currency`; totals are kept per currency and
+   never added up across currencies. Two cases need a second look.
+   `checked_campaigns` of 0 means there were no metrics to check: that is
+   "not evaluated", not "clean". And a reach or awareness campaign is
+   listed for having no conversions although it was
    never meant to produce any; judge it against its own goal.
 5. Call `analytics_summary` for the same window to see the waste against
    the client's total. For one candidate that needs a closer look before a
@@ -112,9 +110,10 @@ These apply to every step above.
    `execute_prepared_change` with that id. Never prepare and execute in one
    breath.
 5. Executing is not applying. After `execute_prepared_change` the change
-   waits for a person to approve it in ADS Beast, unless the client's own
-   write policy applies that kind of change automatically; the reply says
-   which. This server cannot approve, and it cannot switch a campaign on
+   waits for a person to approve it in ADS Beast, unless the client's owner
+   switched on assistant auto-apply for that client and its write policy
+   allows the change (pauses, budgets within limits, negatives only); the
+   reply says which. This server cannot approve, and it cannot switch a campaign on
    without a person. If the preview's `write_control` lists `blocked_by`
    (emergency stop, observe-only mode and similar), say that the change can
    be queued but will not run until that is lifted. Report the real state

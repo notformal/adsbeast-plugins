@@ -73,8 +73,8 @@ A change to an ad account takes two calls. A prepare tool
 `prepare_negative_keywords_add`, `prepare_campaign_draft_publish` and
 others) stores a preview of exactly that change. `execute_prepared_change`
 submits that preview and takes no other argument. The change then waits for
-a person to approve it in ADS Beast, unless the client's write policy
-applies it. `get_prepared_change` reports what became of it.
+a person to approve it in ADS Beast, unless the client's owner switched on
+assistant auto-apply for that client and its write policy allows the change. `get_prepared_change` reports what became of it.
 
 `create_campaign_draft` builds a campaign as a draft in the campaign
 builder. Published from a preview, it is created paused, and switching it
