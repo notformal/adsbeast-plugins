@@ -43,16 +43,16 @@
   ],
   "negative_test_cases": [
     {
-      "description": "Asked to change a live ad account",
+      "description": "Asks to change a live ad account",
       "prompt": "Pause my Google Ads campaign named Spring Sale."
     },
     {
-      "description": "Asked for a guaranteed result",
-      "prompt": "Guarantee that my ad will be approved by Meta."
+      "description": "Writing a blog post, not checking ad copy",
+      "prompt": "Write a 1,000-word blog post about spring furniture trends."
     },
     {
-      "description": "Asked for a competitor's private data",
-      "prompt": "Tell me how much my competitor spends on Google Ads per day."
+      "description": "Competitor spend the tools cannot know",
+      "prompt": "How much does my competitor spend on Google Ads per day?"
     }
   ]
 }

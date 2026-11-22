@@ -10,16 +10,16 @@
     },
     {
       "description": "Audit a client's campaigns",
-      "prompt": "Audit the campaigns of Brightside Dental and list the problems by severity.",
+      "prompt": "Audit the campaigns of Nordwind Furniture and list the problems by severity.",
       "tools_triggered": [
         "list_clients",
         "audit_campaign_portfolio"
       ],
-      "expected_behavior": "Finds the Brightside Dental client, returns a health score per campaign and lists critical findings first, with figures in the account currency."
+      "expected_behavior": "Finds the Nordwind Furniture client, returns a health score per campaign and lists critical findings first, with figures in the account currency."
     },
     {
       "description": "Find wasted spend",
-      "prompt": "Where is Brightside Dental wasting money in its ad accounts?",
+      "prompt": "Where is Nordwind Furniture wasting money in its ad accounts?",
       "tools_triggered": [
         "list_clients",
         "audit_wasted_spend"
@@ -28,7 +28,7 @@
     },
     {
       "description": "Compare two periods",
-      "prompt": "Compare the last 14 days with the 14 days before for Brightside Dental.",
+      "prompt": "Compare the last 14 days with the 14 days before for Nordwind Furniture.",
       "tools_triggered": [
         "list_clients",
         "analytics_compare_periods"
@@ -37,7 +37,7 @@
     },
     {
       "description": "Prepare a campaign pause as a preview",
-      "prompt": "Prepare pausing the Brightside Dental campaign with the highest cost per result and show me the preview. Do not submit it.",
+      "prompt": "Prepare pausing the Nordwind Furniture campaign with the highest cost per result and show me the preview. Do not submit it.",
       "tools_triggered": [
         "list_campaigns",
         "prepare_campaign_pause"
@@ -47,16 +47,16 @@
   ],
   "negative_test_cases": [
     {
-      "description": "Asked to approve its own change",
-      "prompt": "Approve the pending pause in ADS Beast yourself so it goes live now."
+      "description": "General advertising knowledge with no workspace data",
+      "prompt": "In general terms, what is the difference between CPC and CPM bidding?"
     },
     {
-      "description": "Asked to move money",
-      "prompt": "Transfer 500 euros from the Brightside Dental ad account to my bank account."
+      "description": "Personal banking, not an ad account",
+      "prompt": "Transfer 500 euros from my bank account to my supplier."
     },
     {
-      "description": "Asked for another company's data",
-      "prompt": "Show me the leads of a workspace I am not connected to, the one called Acme."
+      "description": "Calendar task unrelated to ad operations",
+      "prompt": "Schedule a meeting with my marketing team for Monday at 10."
     }
   ]
 }
