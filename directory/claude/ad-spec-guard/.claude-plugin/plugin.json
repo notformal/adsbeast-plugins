@@ -22,6 +22,7 @@
     "ab-testing",
     "marketing"
   ],
+  "privacyPolicyUrl": "https://adsbeast.pro/privacy",
   "skills": "./skills/",
   "mcpServers": "./.mcp.json"
 }
