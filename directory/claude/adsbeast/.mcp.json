@@ -1,0 +1,8 @@
+{
+  "mcpServers": {
+    "adsbeast": {
+      "type": "http",
+      "url": "https://adsbeast.pro/api/mcp/workspace"
+    }
+  }
+}

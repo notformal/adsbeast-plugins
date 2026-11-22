@@ -1,0 +1,23 @@
+{
+  "name": "adsbeast",
+  "version": "1.3.6",
+  "description": "Work with your own ADS Beast advertising workspace: audit ad accounts, find wasted spend, check conversion tracking and budget pace, compare platforms, review leads with their attribution, and prepare campaign changes and new campaigns. A change runs only from a stored preview and waits for a person to approve it unless the client opted in to automatic changes. Sign-in is OAuth: a workspace owner or admin approves the connection in ADS Beast.",
+  "author": {
+    "name": "Denha Nexus s.r.o.",
+    "url": "https://adsbeast.pro"
+  },
+  "homepage": "https://github.com/notformal/adsbeast-plugins",
+  "repository": "https://github.com/notformal/adsbeast-plugins",
+  "license": "MIT",
+  "keywords": [
+    "advertising",
+    "leads",
+    "crm",
+    "campaigns",
+    "attribution",
+    "marketing",
+    "adsbeast"
+  ],
+  "skills": "./skills/",
+  "mcpServers": "./.mcp.json"
+}

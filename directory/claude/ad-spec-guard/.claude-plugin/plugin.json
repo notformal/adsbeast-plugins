@@ -1,0 +1,27 @@
+{
+  "name": "ad-spec-guard",
+  "version": "1.0.0",
+  "description": "Verified specifications and decision thresholds for paid advertising. Checks ad copy against each platform's hard character limits, validates creative files against placement dimensions and file size caps, and gates campaign decisions on whether there is enough data to act. Every answer comes from a maintained table or a stated formula rather than recall, because platform limits change and a misremembered limit produces an ad the platform rejects on upload.",
+  "author": {
+    "name": "Denha Nexus s.r.o.",
+    "url": "https://adsbeast.pro"
+  },
+  "homepage": "https://github.com/notformal/adsbeast-plugins",
+  "repository": "https://github.com/notformal/adsbeast-plugins",
+  "license": "MIT",
+  "keywords": [
+    "advertising",
+    "ppc",
+    "google-ads",
+    "meta-ads",
+    "tiktok-ads",
+    "linkedin-ads",
+    "ad-copy",
+    "creative-specs",
+    "utm",
+    "ab-testing",
+    "marketing"
+  ],
+  "skills": "./skills/",
+  "mcpServers": "./.mcp.json"
+}

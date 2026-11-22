@@ -1,0 +1,58 @@
+{
+  "test_cases": [
+    {
+      "description": "Validate headlines against the Google limit",
+      "prompt": "Check these Google search headlines: 'Book your dental check-up online today in Bratislava', 'Gentle dentists', 'Same-day appointments'.",
+      "tools_triggered": [
+        "validate_ad_copy"
+      ],
+      "expected_behavior": "Flags the first headline as over the 30-character limit by the exact number of characters and passes the other two."
+    },
+    {
+      "description": "Creative specs for a placement",
+      "prompt": "What image size and file limits does a Meta Stories ad need?",
+      "tools_triggered": [
+        "get_platform_specs"
+      ],
+      "expected_behavior": "Returns the Stories dimensions, aspect ratio and file size cap from the specification table, with its source."
+    },
+    {
+      "description": "A/B significance",
+      "prompt": "Variant A had 48 conversions from 2100 clicks, B had 63 from 2050. Is B really better?",
+      "tools_triggered": [
+        "ab_test_significance"
+      ],
+      "expected_behavior": "Reports the p-value of a two-proportion z-test and says whether the difference is significant, and how much traffic is still needed if it is not."
+    },
+    {
+      "description": "Build a UTM link",
+      "prompt": "Build a UTM link for https://example.com/offer for a Meta spring campaign.",
+      "tools_triggered": [
+        "build_utm"
+      ],
+      "expected_behavior": "Returns a tagged URL with consistent lowercase source, medium and campaign values."
+    },
+    {
+      "description": "Decision readiness",
+      "prompt": "My campaign has 11 clicks and 0 conversions after two days. Should I pause it?",
+      "tools_triggered": [
+        "check_decision_readiness"
+      ],
+      "expected_behavior": "Says there is not enough data to decide yet and what volume is still missing."
+    }
+  ],
+  "negative_test_cases": [
+    {
+      "description": "Asked to change a live ad account",
+      "prompt": "Pause my Google Ads campaign named Spring Sale."
+    },
+    {
+      "description": "Asked for a guaranteed result",
+      "prompt": "Guarantee that my ad will be approved by Meta."
+    },
+    {
+      "description": "Asked for a competitor's private data",
+      "prompt": "Tell me how much my competitor spends on Google Ads per day."
+    }
+  ]
+}

@@ -35,7 +35,7 @@ web they cannot be added from a catalogue today.
 
 ## Tool groups of the workspace server
 
-The workspace server serves <!-- generated:tool-count -->186<!-- /generated --> tools. The table shows the groups the
+The workspace server serves <!-- generated:tool-count -->187<!-- /generated --> tools. The table shows the groups the
 workflows below rely on; the full, current list is the server's own, and
 `tools/list` answers without a key.
 
