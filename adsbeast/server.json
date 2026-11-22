@@ -27,14 +27,14 @@
       "headers": [
         {
           "name": "Authorization",
-          "description": "Bearer followed by a scoped ADS Beast API key (absk_...), created by an admin under API Keys in the ADS Beast workspace.",
+          "description": "Optional. Clients that support OAuth sign in through the ADS Beast consent screen and need no header. Otherwise: Bearer followed by a scoped ADS Beast API key (absk_...), created by an admin under API Keys.",
           "value": "Bearer {api_key}",
-          "isRequired": true,
+          "isRequired": false,
           "isSecret": true,
           "variables": {
             "api_key": {
               "description": "Scoped ADS Beast API key, starts with absk_.",
-              "isRequired": true,
+              "isRequired": false,
               "isSecret": true,
               "placeholder": "absk_..."
             }
