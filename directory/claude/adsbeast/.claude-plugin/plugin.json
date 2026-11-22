@@ -6,7 +6,7 @@
     "name": "Denha Nexus s.r.o.",
     "url": "https://adsbeast.pro"
   },
-  "homepage": "https://github.com/notformal/adsbeast-plugins",
+  "homepage": "https://adsbeast.pro",
   "repository": "https://github.com/notformal/adsbeast-plugins",
   "license": "MIT",
   "keywords": [
@@ -18,7 +18,11 @@
     "marketing",
     "adsbeast"
   ],
+  "displayName": "ADS Beast",
+  "documentationUrl": "https://github.com/notformal/adsbeast-plugins/tree/main/directory/claude/adsbeast",
+  "supportUrl": "https://adsbeast.pro/en/support",
   "privacyPolicyUrl": "https://adsbeast.pro/privacy",
+  "termsOfServiceUrl": "https://adsbeast.pro/terms",
   "skills": "./skills/",
   "mcpServers": "./.mcp.json"
 }

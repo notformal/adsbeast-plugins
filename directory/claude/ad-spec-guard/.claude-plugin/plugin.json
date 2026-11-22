@@ -6,7 +6,7 @@
     "name": "Denha Nexus s.r.o.",
     "url": "https://adsbeast.pro"
   },
-  "homepage": "https://github.com/notformal/adsbeast-plugins",
+  "homepage": "https://adsbeast.pro",
   "repository": "https://github.com/notformal/adsbeast-plugins",
   "license": "MIT",
   "keywords": [
@@ -22,7 +22,11 @@
     "ab-testing",
     "marketing"
   ],
+  "displayName": "Ad Spec Guard",
+  "documentationUrl": "https://github.com/notformal/adsbeast-plugins/tree/main/directory/claude/ad-spec-guard",
+  "supportUrl": "https://adsbeast.pro/en/support",
   "privacyPolicyUrl": "https://adsbeast.pro/privacy",
+  "termsOfServiceUrl": "https://adsbeast.pro/terms",
   "skills": "./skills/",
   "mcpServers": "./.mcp.json"
 }
